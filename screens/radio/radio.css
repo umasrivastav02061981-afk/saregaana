@@ -1,0 +1,122 @@
+/* ===== radio.css — HOME screen. Every class starts with rd- ===== */
+.radio{padding:20px 16px 28px;display:flex;flex-direction:column;gap:20px}
+
+/* greeting */
+.rd-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.rd-hi{font-family:var(--f-display);font-size:32px;line-height:1.1;color:var(--paper)}
+.rd-en{margin-top:5px;font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.rd-air{display:flex;align-items:center;gap:7px;padding:6px 11px;border:1.5px solid var(--line);border-radius:999px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.2em;color:var(--muted);transition:color .3s,border-color .3s}
+.rd-air i{width:9px;height:9px;border-radius:50%;background:#4a2a1a;transition:background .3s,box-shadow .3s}
+.rd-air.on{color:#ffb9ad;border-color:rgba(198,58,47,.55)}
+.rd-air.on i{background:#ff4a3a;box-shadow:0 0 10px 2px rgba(255,74,58,.85)}
+
+/* ---- the wooden cabinet ---- */
+.rd-cabinet{
+  position:relative;padding:14px;border-radius:22px;
+  background:
+    repeating-linear-gradient(92deg,rgba(0,0,0,.12) 0 2px,transparent 2px 7px),
+    linear-gradient(145deg,var(--wood),var(--wood-d));
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.08),inset 0 0 0 6px rgba(0,0,0,.22),0 26px 44px rgba(0,0,0,.55);
+}
+.rd-cabinet::before{content:"";position:absolute;inset:7px;border:1px solid rgba(224,168,46,.45);border-radius:16px;pointer-events:none}
+
+/* glass dial window */
+.rd-glass{
+  --t:.12;position:relative;height:122px;border-radius:10px;overflow:hidden;
+  background:linear-gradient(#efdca0,#d9b968);
+  box-shadow:inset 0 0 22px rgba(110,60,8,.6),0 0 0 4px #2a170c,0 0 0 6px #b5822d;
+  transition:background .5s,box-shadow .5s;
+}
+.rd-glass.lit{background:linear-gradient(#ffeaa6,#f3c95a);box-shadow:inset 0 0 22px rgba(150,80,10,.45),0 0 0 4px #2a170c,0 0 0 6px #b5822d,0 0 36px 4px rgba(var(--glow),.5)}
+.rd-glass::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.28),transparent 32%,transparent 70%,rgba(255,255,255,.12));pointer-events:none}
+
+.rd-scale{position:absolute;left:4%;right:4%;top:20px;height:44px;display:flex;justify-content:space-between;align-items:flex-start}
+.rd-scale .t{position:relative;width:1px;height:12px;background:rgba(60,30,8,.75)}
+.rd-scale .t.mid{height:19px}
+.rd-scale .t.big{height:28px;width:1.5px}
+.rd-scale em{position:absolute;top:30px;left:50%;transform:translateX(-50%);font-style:normal;font-family:var(--f-mono);font-size:10px;color:#4a2406}
+
+.rd-needle{
+  position:absolute;top:8px;bottom:8px;width:2px;margin-left:-1px;border-radius:1px;
+  left:calc(4% + var(--t) * 92%);background:#c63a2f;box-shadow:0 0 7px rgba(198,58,47,.8);
+}
+.rd-needle::before{content:"";position:absolute;top:-2px;left:-3px;width:8px;height:8px;border-radius:50%;background:#c63a2f}
+
+.rd-freq{position:absolute;left:14px;bottom:8px;display:flex;align-items:baseline;gap:5px;color:#4a2406}
+.rd-freq b{font-family:var(--f-mono);font-weight:500;font-size:27px;letter-spacing:-.02em}
+.rd-freq small{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em}
+.rd-gname{position:absolute;right:14px;bottom:10px;font-family:var(--f-hand);font-weight:700;font-size:17px;color:#7a1f16}
+
+/* speaker + meters + knob */
+.rd-lower{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:14px;margin-top:16px}
+.rd-grille{
+  height:92px;border-radius:10px;border:3px solid #2a170c;
+  background:
+    repeating-linear-gradient(0deg,rgba(0,0,0,.4) 0 2px,transparent 2px 5px),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.3) 0 2px,transparent 2px 5px),
+    #8e6d3c;
+  box-shadow:inset 0 4px 12px rgba(0,0,0,.65);
+}
+.rd-vu{display:flex;flex-direction:column;gap:7px}
+.vu{position:relative;width:64px;height:42px;border-radius:6px;overflow:hidden;background:linear-gradient(#f6e8bd,#dcc47e);box-shadow:inset 0 0 8px rgba(110,60,8,.5),0 0 0 3px #2a170c}
+.vu::before{content:"";position:absolute;left:8px;right:8px;top:8px;height:22px;border-radius:50% 50% 0 0;border:1.5px solid rgba(60,30,8,.55);border-bottom:0}
+.vu i{position:absolute;left:50%;bottom:4px;width:2px;height:30px;margin-left:-1px;background:#2b1a10;transform-origin:50% 100%;transform:rotate(-38deg);animation:rd-vu 2.6s ease-in-out infinite alternate}
+.vu.v2 i{animation-duration:3.3s;animation-delay:-1.1s}
+@keyframes rd-vu{0%{transform:rotate(-40deg)}35%{transform:rotate(-8deg)}60%{transform:rotate(-26deg)}100%{transform:rotate(22deg)}}
+
+.rd-knob-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.rd-knob-wrap span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.2em;color:rgba(241,227,195,.7)}
+.rd-knob{
+  --r:-100deg;position:relative;width:88px;height:88px;border-radius:50%;touch-action:none;cursor:grab;
+  background:
+    repeating-conic-gradient(rgba(0,0,0,.2) 0 5deg,transparent 5deg 10deg),
+    radial-gradient(circle at 35% 28%,#f6dc92,#c9973f 58%,#7a5518);
+  box-shadow:0 0 0 4px #2a170c,0 10px 18px rgba(0,0,0,.6),inset 0 -4px 8px rgba(0,0,0,.35);
+  transform:rotate(var(--r));
+}
+.rd-knob i{position:absolute;left:50%;top:7px;width:5px;height:24px;margin-left:-2.5px;border-radius:3px;background:#2b1a10}
+.rd-knob:active{cursor:grabbing}
+
+/* ---- station push-buttons ---- */
+.rd-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.rd-pre{
+  display:flex;flex-direction:column;align-items:center;gap:1px;padding:10px 3px 9px;border-radius:10px;color:var(--ink);
+  background:linear-gradient(var(--paper),var(--paper-2));
+  box-shadow:0 5px 0 #7d6234,0 10px 16px rgba(0,0,0,.4);
+  transition:transform .12s,box-shadow .12s,background .2s;
+}
+.rd-pre b{font-family:var(--f-hand);font-weight:700;font-size:13px;line-height:1.15}
+.rd-pre small{font-family:var(--f-mono);font-size:8.5px;letter-spacing:.06em;opacity:.7}
+.rd-pre.on{transform:translateY(4px);background:linear-gradient(#f3c24f,var(--accent));box-shadow:0 1px 0 #7d6234,0 3px 8px rgba(0,0,0,.4),0 0 16px rgba(var(--glow),.55)}
+
+/* ---- station poster card ---- */
+.rd-card{
+  position:relative;padding:20px 20px 18px;border-radius:12px;color:var(--ink);transform:rotate(-.7deg);
+  background:radial-gradient(rgba(60,30,8,.1) 1px,transparent 1.5px) 0 0/9px 9px,linear-gradient(var(--paper),var(--paper-2));
+  box-shadow:0 0 0 3px var(--ink),0 0 0 5px var(--paper),0 18px 34px rgba(0,0,0,.5);
+  transition:opacity .3s;
+}
+.rd-era{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7a1f16}
+.rd-card-hi{margin-top:4px;font-family:var(--f-display);font-weight:400;font-size:34px;line-height:1.1;color:var(--ink)}
+.rd-card-en{margin-top:2px;font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#6b5030}
+.rd-count{margin-top:12px;font-family:var(--f-hand);font-size:16px;line-height:1.3;color:#4a3320}
+.rd-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.rd-play,.rd-add{padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;transition:transform .12s,opacity .2s}
+.rd-play{background:var(--accent-2);color:#fff3dc;box-shadow:0 3px 0 #7a1f16}
+.rd-add{border:2px solid var(--ink);color:var(--ink)}
+.rd-play:active,.rd-add:active{transform:translateY(2px)}
+.rd-card.is-static .rd-card-hi{animation:rd-flicker .7s steps(2) infinite;color:#7a6446}
+.rd-card.is-static .rd-play,.rd-card.is-static .rd-add{opacity:.4;pointer-events:none}
+@keyframes rd-flicker{50%{opacity:.35}}
+
+/* ---- quick row ---- */
+.rd-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rd-quick button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:13px 6px;border:2px dashed var(--line);border-radius:12px;transition:border-color .2s,background .2s}
+.rd-quick button:active,.rd-quick button:hover{border-color:var(--accent);background:rgba(var(--glow),.08)}
+.rd-quick b{font-family:var(--f-hand);font-weight:700;font-size:15px;color:var(--paper)}
+.rd-quick small{font-family:var(--f-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+@media (max-width:360px){
+  .rd-knob{width:76px;height:76px}
+  .rd-card-hi{font-size:29px}
+}

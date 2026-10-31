@@ -1,0 +1,27 @@
+/* ===== theme.css — colours only. Change a theme here, whole app follows. =====
+   Themes: radio (default), gramophone, cassette  (body[data-theme="..."]) */
+:root,
+[data-theme="radio"]{
+  --bg:#1a0f0a;  --bg2:#26150d;
+  --wood:#6b3b1e; --wood-d:#3d2010;
+  --paper:#f1e3c3; --paper-2:#dcc89a; --ink:#2b1a10;
+  --text:#f4e8cd; --muted:#b39b78; --line:rgba(241,227,195,.14);
+  --accent:#e0a82e; --accent-2:#c63a2f; --teal:#2f7a72;
+  --glow:224,168,46;
+}
+[data-theme="gramophone"]{
+  --bg:#140a0c;  --bg2:#210f14;
+  --wood:#4a1c22; --wood-d:#2a0e12;
+  --paper:#ead9b4; --paper-2:#d3bd8c; --ink:#26120f;
+  --text:#f1e2c4; --muted:#a8917a; --line:rgba(234,217,180,.14);
+  --accent:#d4a63a; --accent-2:#a8262e; --teal:#7a5a2b;
+  --glow:212,166,58;
+}
+[data-theme="cassette"]{
+  --bg:#16212a;  --bg2:#1d2d38;
+  --wood:#c2562a; --wood-d:#8c3a18;
+  --paper:#f4e6c8; --paper-2:#e0cfa6; --ink:#1f2a30;
+  --text:#f2e8d2; --muted:#9db0b8; --line:rgba(244,230,200,.16);
+  --accent:#f2b134; --accent-2:#e2552c; --teal:#3aa396;
+  --glow:242,177,52;
+}

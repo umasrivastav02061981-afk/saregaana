@@ -1,0 +1,32 @@
+/* ===== splash.css — vinyl spins, valve radio "warms up" ===== */
+.sp{
+  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center;
+  background:radial-gradient(circle at 50% 38%,rgba(var(--glow),.22),transparent 58%);cursor:pointer;
+}
+.sp-vinyl{
+  position:relative;width:176px;height:176px;border-radius:50%;margin-bottom:12px;
+  background:
+    radial-gradient(circle,#0b0605 0 5%,transparent 5.5%),
+    radial-gradient(circle,var(--accent-2) 0 31%,transparent 31.5%),
+    repeating-radial-gradient(circle,#15100d 0 2px,#241a14 2px 4px);
+  box-shadow:0 0 0 3px #060403,0 0 40px 6px rgba(var(--glow),.35),0 18px 40px rgba(0,0,0,.6);
+  animation:sp-spin 5s linear infinite;
+}
+.sp-vinyl::before{ /* shine that gives the record depth */
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 20deg,transparent 0 20%,rgba(255,255,255,.14) 25%,transparent 32% 70%,rgba(255,255,255,.1) 76%,transparent 82%);
+}
+.sp-vinyl i{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;border:2px dashed rgba(255,235,200,.55)}
+@keyframes sp-spin{to{transform:rotate(360deg)}}
+
+.sp-title{
+  font-family:var(--f-display);font-weight:400;font-size:58px;line-height:1.05;color:var(--paper);
+  text-shadow:0 3px 0 var(--accent-2),0 0 28px rgba(var(--glow),.5);
+  animation:sp-glow 1.6s ease-out both;
+}
+@keyframes sp-glow{from{opacity:0;letter-spacing:.2em;filter:blur(6px)}to{opacity:1;letter-spacing:0;filter:none}}
+.sp-sub{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;color:var(--accent)}
+.sp-bar{width:180px;height:5px;margin-top:10px;border-radius:3px;background:rgba(241,227,195,.14);overflow:hidden}
+.sp-bar i{display:block;height:100%;width:0;border-radius:3px;background:var(--accent);box-shadow:0 0 10px rgba(var(--glow),.8);animation:sp-load 2.2s ease-in-out forwards}
+@keyframes sp-load{to{width:100%}}
+.sp-tip{font-family:var(--f-hand);font-size:14px;color:var(--muted)}

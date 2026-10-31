@@ -1,0 +1,11 @@
+/* ===== fonts.css — Hindi + English fonts (free Google Fonts) =====
+   Needs internet the first time; Step 6 (sw.js) will cache them for offline. */
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Kalam:wght@300;400;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Rozha+One&family=Yatra+One&display=swap');
+
+:root{
+  --f-display:'Yatra One','Rozha One',serif;          /* big poster headings */
+  --f-title:'Rozha One','Yatra One',serif;            /* bold titles */
+  --f-hand:'Kalam','Noto Sans Devanagari',cursive;    /* handwritten cassette labels */
+  --f-body:'Noto Sans Devanagari','Segoe UI',system-ui,sans-serif;
+  --f-mono:'DM Mono',ui-monospace,monospace;          /* tiny labels */
+}
