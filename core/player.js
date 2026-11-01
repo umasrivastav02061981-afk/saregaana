@@ -115,6 +115,7 @@
     },
     cycleRepeat() { repeat = repeat === 'off' ? 'all' : repeat === 'all' ? 'one' : 'off'; sync(); },
     current, state: snap,
+    position() { return audio.currentTime || 0; },
     queueSongs() { return queue.map((id) => S.library.get(id)).filter(Boolean); },
 
     // after the app opens: show the last song in the mini player (paused)

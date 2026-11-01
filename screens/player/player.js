@@ -5,7 +5,7 @@ Saregaana.register('player', (function () {
   let root, el = {}, offs = [], seeking = false, qOpen = false, stopWatch = null;
 
   const ids = ['plRoot', 'plBack', 'plQBtn', 'plEmpty', 'plMain', 'plLabel', 'plTitle', 'plSub', 'plCur', 'plTot', 'plRange',
-               'plShuffle', 'plPrev', 'plPlay', 'plNext', 'plRepeat', 'plQueue', 'plList'];
+               'plShuffle', 'plPrev', 'plPlay', 'plNext', 'plRepeat', 'plQueue', 'plList', 'plExtra', 'plFav', 'plAddList', 'plLyrics'];
 
   function paintRange(v) { el.plRange.style.setProperty('--p', (v / 10) + '%'); }
 
@@ -14,6 +14,8 @@ Saregaana.register('player', (function () {
     el.plEmpty.hidden = !!song;
     el.plMain.hidden = !song;
     el.plQBtn.hidden = !song;
+    el.plExtra.hidden = !song;
+    paintFav(song);
     if (!song) { qOpen = false; el.plQueue.hidden = true; return; }
 
     el.plTitle.textContent = song.title;
@@ -41,6 +43,12 @@ Saregaana.register('player', (function () {
     if (t.dur) el.plTot.textContent = S.fmtTime(t.dur);
   }
 
+  function paintFav(song) {
+    const on = !!song && S.lists.isFav(song.id);
+    el.plFav.setAttribute('aria-pressed', on);
+    el.plFav.querySelector('span').textContent = on ? 'Favourited' : 'Favourite';
+  }
+
   /* ---------- up-next list ---------- */
   function renderQueue() {
     el.plList.textContent = '';
@@ -61,6 +69,14 @@ Saregaana.register('player', (function () {
       el.plQueue.hidden = !qOpen;
       if (qOpen) { renderQueue(); el.plQueue.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     });
+    el.plFav.addEventListener('click', async () => {
+      const song = S.player.current();
+      if (!song) return;
+      try { const on = await S.lists.toggleFav(song); S.toast(on ? 'Added to Favourites' : 'Removed from Favourites'); }
+      catch (e) { S.log('fav', e); S.toast('Could not update Favourites'); }
+    });
+    el.plAddList.addEventListener('click', () => { const song = S.player.current(); if (song) S.lists.pick(song); });
+    el.plLyrics.addEventListener('click', () => S.go('lyrics'));
     S.$$('[data-go]', root).forEach((b) => b.addEventListener('click', () => S.go(b.dataset.go)));
 
     el.plPlay.addEventListener('click', () => S.player.toggle());
@@ -85,6 +101,7 @@ Saregaana.register('player', (function () {
     offs.push(S.bus.on('player:track', onTrack));
     offs.push(S.bus.on('player:state', onState));
     offs.push(S.bus.on('player:time', onTime));
+    offs.push(S.bus.on('playlists:changed', () => paintFav(S.player.current())));
 
     // show what is already loaded
     onTrack(S.player.current());

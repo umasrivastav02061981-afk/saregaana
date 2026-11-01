@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   const S = window.Saregaana;
-  const NAME = 'saregaana', VER = 2;
+  const NAME = 'saregaana', VER = 3;
   let db = null;
   const coverCache = new Map();               // song id -> picture URL (or null)
 
@@ -23,6 +23,8 @@
         if (!d.objectStoreNames.contains('files')) d.createObjectStore('files');
         if (!d.objectStoreNames.contains('covers')) d.createObjectStore('covers');
         if (!d.objectStoreNames.contains('posters')) d.createObjectStore('posters');   // film posters you pick
+        if (!d.objectStoreNames.contains('playlists')) d.createObjectStore('playlists', { keyPath: 'id' });
+        if (!d.objectStoreNames.contains('lyrics')) d.createObjectStore('lyrics');     // song id -> lyrics text
       };
       r.onsuccess = () => res(r.result);
       r.onerror = () => rej(r.error);
@@ -30,7 +32,7 @@
   }
 
   /* ---------- S.library: the list lives in memory so screens are instant ---------- */
-  const lib = { list: [], map: new Map() };
+  const lib = { list: [], map: new Map(), lists: [] };
 
   function rebuild(songs) {
     lib.list = songs.sort((a, b) => b.added - a.added);
@@ -51,6 +53,8 @@
     get list() { return lib.list; },
     get(id) { return lib.map.get(id) || null; },
     hasSig(sig) { return lib.list.some((s) => s.sig === sig); },
+    get playlists() { return lib.lists; },
+    playlist(id) { return lib.lists.find((p) => p.id === id) || null; },
     byStation(id) { return lib.list.filter((s) => inStation(s, id)); },
     count(id) { return lib.list.filter((s) => inStation(s, id)).length; }
   };
@@ -61,6 +65,7 @@
       db = await open();
       const all = await req(db.transaction('songs').objectStore('songs').getAll());
       rebuild(all);
+      lib.lists = await req(db.transaction('playlists').objectStore('playlists').getAll());
     },
 
     async addSong(meta, blob, cover) {
@@ -101,6 +106,36 @@
       S.bus.emit('library:changed');
     },
 
+    /* ---- playlists ---- */
+    async putPlaylist(pl) {
+      const t = db.transaction('playlists', 'readwrite');
+      t.objectStore('playlists').put(pl);
+      await finish(t);
+      const i = lib.lists.findIndex((p) => p.id === pl.id);
+      if (i >= 0) lib.lists[i] = pl; else lib.lists.push(pl);
+      S.bus.emit('playlists:changed');
+    },
+    async deletePlaylist(id) {
+      const t = db.transaction('playlists', 'readwrite');
+      t.objectStore('playlists').delete(id);
+      await finish(t);
+      lib.lists = lib.lists.filter((p) => p.id !== id);
+      S.bus.emit('playlists:changed');
+    },
+
+    /* ---- lyrics (plain text or .lrc text) ---- */
+    getLyrics(id) { return req(db.transaction('lyrics').objectStore('lyrics').get(id)); },
+    async setLyrics(id, text) {
+      const t = db.transaction('lyrics', 'readwrite');
+      t.objectStore('lyrics').put(text, id);
+      await finish(t);
+    },
+    async deleteLyrics(id) {
+      const t = db.transaction('lyrics', 'readwrite');
+      t.objectStore('lyrics').delete(id);
+      await finish(t);
+    },
+
     getPoster(key) { return req(db.transaction('posters').objectStore('posters').get(key)); },
     async putPoster(key, blob) {
       const t = db.transaction('posters', 'readwrite');
@@ -114,11 +149,19 @@
     },
 
     async removeSong(id) {
-      const t = db.transaction(['songs', 'files', 'covers'], 'readwrite');
+      const t = db.transaction(['songs', 'files', 'covers', 'playlists', 'lyrics'], 'readwrite');
       t.objectStore('songs').delete(id);
       t.objectStore('files').delete(id);
       t.objectStore('covers').delete(id);
+      t.objectStore('lyrics').delete(id);
+      const touched = new Map();                                   // take the song out of every playlist
+      lib.lists.filter((p) => p.songIds.includes(id)).forEach((p) => {
+        const n = Object.assign({}, p, { songIds: p.songIds.filter((x) => x !== id), updated: Date.now() });
+        t.objectStore('playlists').put(n);
+        touched.set(p.id, n);
+      });
       await finish(t);
+      if (touched.size) { lib.lists = lib.lists.map((p) => touched.get(p.id) || p); S.bus.emit('playlists:changed'); }
       const u = coverCache.get(id);
       if (u) URL.revokeObjectURL(u);
       coverCache.delete(id);

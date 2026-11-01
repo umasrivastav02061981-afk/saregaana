@@ -1,0 +1,26 @@
+<section class="ly" id="lyRoot">
+
+  <header class="ly-top">
+    <button class="ly-ic" id="lyBack" type="button" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg>
+    </button>
+    <div class="ly-ti"><b id="lyTitle">Lyrics</b><span id="lySub"></span></div>
+    <button class="ly-ic" id="lyMenu" type="button" aria-label="Lyrics options" hidden>
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg>
+    </button>
+  </header>
+
+  <div class="ly-body" id="lyBody"></div>
+
+  <div class="ly-empty" id="lyEmpty" hidden>
+    <div class="ly-note">♪</div>
+    <h2 id="lyEmptyT">No lyrics yet</h2>
+    <p id="lyEmptyP">Add a .lrc file for lyrics that scroll with the song, or a .txt file / pasted text for plain lyrics.</p>
+    <div class="ly-btns" id="lyBtns">
+      <button type="button" id="lyChoose" class="main">Choose .lrc / .txt file</button>
+      <button type="button" id="lyPaste">Paste lyrics</button>
+    </div>
+  </div>
+
+  <input type="file" id="lyFile" accept=".lrc,.txt,text/plain" hidden>
+</section>

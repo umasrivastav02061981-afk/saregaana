@@ -46,6 +46,8 @@
     // 1. the song database (if it fails, the app still opens, just with no songs)
     try { await S.db.init(); }
     catch (e) { S.log('db', e); }
+    try { await S.lists.init(); }                      // makes sure the Favourites playlist exists
+    catch (e) { S.log('lists', e); }
 
     // 2. parts that live on every screen
     const holder = () => {                             // hidden box for components that only give templates

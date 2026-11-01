@@ -1,0 +1,57 @@
+/* ===== playlists.css — cassette tapes. Every class starts with ls- or cs- ===== */
+.ls{padding:20px 16px 30px}
+.ls-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ls-head h1{font-family:var(--f-display);font-weight:400;font-size:36px;line-height:1.05;color:var(--paper)}
+.ls-head[hidden]{display:none}
+.ls-new{padding:10px 18px;border-radius:999px;background:var(--accent);color:#24160c;font-weight:700;font-size:14px}
+.ls-new:active{transform:translateY(1px)}
+.ls-view{margin-top:18px}
+.ls-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 14px}
+.ls-tip{margin-top:20px;padding:16px;border:2px dashed var(--line);border-radius:12px;text-align:center;font-size:14px;line-height:1.55;color:var(--muted)}
+
+/* ---- the cassette ---- */
+.cs{position:relative;display:block;width:100%;text-align:left;transition:transform .15s}
+.cs:active{transform:scale(.97)}
+.cs-body{
+  position:relative;aspect-ratio:1.62/1;border-radius:10px;overflow:hidden;
+  background:
+    radial-gradient(rgba(255,255,255,.12) 1px,transparent 1.6px) 0 0/7px 7px,
+    linear-gradient(160deg,var(--c1,#8c2f2a),var(--c2,#d9892b) 170%);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.18),inset 0 0 0 5px rgba(0,0,0,.18),0 14px 24px rgba(0,0,0,.5);
+}
+.cs-body::before,.cs-body::after{content:"";position:absolute;top:7px;width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.45)}
+.cs-body::before{left:8px}.cs-body::after{right:8px}
+.cs-label{
+  position:absolute;left:8%;right:8%;top:11%;height:39%;padding:7px 10px 5px;border-radius:4px;color:var(--ink);overflow:hidden;
+  background:repeating-linear-gradient(transparent 0 15px,rgba(60,30,8,.2) 15px 16px),var(--paper);
+  box-shadow:0 1px 0 rgba(0,0,0,.25);display:flex;flex-direction:column;justify-content:space-between;
+}
+.cs-label b{font-family:var(--f-hand);font-weight:700;font-size:16px;line-height:1.1;color:#2a1c12;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-label small{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;color:#6b5030}
+.cs-win{position:absolute;left:22%;right:22%;top:54%;height:25%;border-radius:999px;background:#150e0a;box-shadow:inset 0 2px 5px rgba(0,0,0,.8),0 0 0 2px rgba(255,255,255,.2);display:flex;align-items:center;justify-content:space-between;padding:0 8%}
+.cs-reel{display:block;width:28px;height:28px;border-radius:50%;
+  background:radial-gradient(circle,#150e0a 0 22%,transparent 23%),repeating-conic-gradient(#e9dcc0 0 25deg,#8a7a5a 25deg 60deg)}
+.cs-foot{position:absolute;left:19%;right:19%;bottom:0;height:15%;background:rgba(0,0,0,.35);clip-path:polygon(7% 0,93% 0,100% 100%,0 100%)}
+.cs.fav .cs-body{--c1:#8c2f2a;--c2:#d9892b}
+.cs.fav .cs-label b::before{content:"♥ ";color:#b8312f}
+.cs.big{cursor:default;width:150px;flex:none}
+.cs.big:active{transform:none}
+.sg-playing .cs.big .cs-reel{animation:cs-spin 2.4s linear infinite}
+@keyframes cs-spin{to{transform:rotate(360deg)}}
+
+/* ---- detail ---- */
+.ls-back{display:inline-flex;align-items:center;gap:6px;padding:8px 14px 8px 8px;margin-bottom:12px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted)}
+.ls-back svg{width:20px;height:20px}
+.ls-back:active{background:rgba(255,255,255,.08);color:var(--paper)}
+.ls-dh{display:flex;gap:16px;align-items:flex-end}
+.ls-dt{min-width:0;display:flex;flex-direction:column;gap:6px}
+.ls-dt h2{font-family:var(--f-display);font-weight:400;font-size:27px;line-height:1.12;color:var(--paper);word-break:break-word}
+.ls-dt p{font-size:13px;color:var(--muted)}
+.ls-acts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 8px}
+.ls-act{padding:10px 18px;border-radius:999px;font-weight:700;font-size:13.5px;border:2px solid var(--line);color:var(--text)}
+.ls-act.main{background:var(--accent);border-color:var(--accent);color:#24160c}
+.ls-act.danger{color:#ff9d90}
+.ls-list{display:flex;flex-direction:column}
+.ls-empty{padding:34px 10px;text-align:center}
+.ls-empty h2{font-family:var(--f-display);font-weight:400;font-size:24px;color:var(--paper)}
+.ls-empty p{margin:8px auto 0;max-width:280px;font-size:14px;line-height:1.55;color:var(--muted)}

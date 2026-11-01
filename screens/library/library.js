@@ -203,6 +203,7 @@ Saregaana.register('library', (function () {
             S.toast('Song updated');
         } },
         { label: 'Poster', kind: 'ghost', onClick: () => { setTimeout(() => posterSheet(song), 380); } },
+        { label: 'Playlist', kind: 'ghost', onClick: () => { setTimeout(() => S.lists.pick(song), 380); } },
         { label: 'Delete', kind: 'danger', onClick: () => {
             setTimeout(async () => {
               const ok = await S.modal.confirm({ title: 'Delete song?', text: '“' + song.title + '” will be removed from this phone.', yes: 'Delete', danger: true });

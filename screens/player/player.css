@@ -75,6 +75,15 @@
 .pl.is-playing .pl-play .i-play{display:none}
 .pl.is-playing .pl-play .i-pause{display:block}
 
+/* ---- favourite / playlist / lyrics ---- */
+.pl-extra{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}
+.pl-extra[hidden]{display:none}
+.pl-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;font-weight:600;font-size:13.5px;border:1.5px solid var(--line);color:var(--text);transition:background .2s,color .2s,border-color .2s}
+.pl-pill svg{width:18px;height:18px}
+.pl-pill:active{transform:translateY(1px)}
+.pl-pill[aria-pressed="true"]{border-color:var(--accent-2);color:#ff9d90}
+.pl-pill[aria-pressed="true"] svg{fill:currentColor}
+
 /* ---- queue ---- */
 .pl-queue{margin-top:22px}
 .pl-queue[hidden]{display:none}

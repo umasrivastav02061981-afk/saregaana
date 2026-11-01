@@ -45,10 +45,30 @@ Saregaana.register('add', (function () {
     return (cls, text) => { li.className = cls; b.textContent = text; };
   }
 
+  const baseOf = (name) => name.replace(/\.[^.]+$/, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const isLyric = (f) => /\.(lrc|txt)$/i.test(f.name);
+
+  // attach .lrc / .txt files to songs that have the same file name
+  async function attachLyrics(files) {
+    let n = 0;
+    for (const f of files) {
+      const b = baseOf(f.name);
+      const song = S.library.list.find((s) => baseOf((s.sig || '').split('|')[0]) === b);
+      if (!song) continue;
+      try {
+        const text = (await S.tags.readText(f)).trim();
+        if (text) { await S.db.setLyrics(song.id, text); n++; }
+      } catch (e) { S.log('lyrics:' + f.name, e); }
+    }
+    return n;
+  }
+
   async function handle(files) {
     if (busy) return;
-    const list = Array.from(files).filter((f) => /^audio\//.test(f.type) || AUDIO_EXT.test(f.name));
-    if (!list.length) { S.toast('No songs found'); return; }
+    const picked = Array.from(files);
+    const list = picked.filter((f) => !isLyric(f) && (/^audio\//.test(f.type) || AUDIO_EXT.test(f.name)));
+    const lyrics = picked.filter(isLyric);
+    if (!list.length && !lyrics.length) { S.toast('No songs found'); return; }
 
     busy = true;
     el.adProg.hidden = false;
@@ -75,8 +95,19 @@ Saregaana.register('add', (function () {
       }
     }
 
+    let lyr = 0;
+    if (lyrics.length) {
+      el.adProgText.textContent = 'Attaching lyrics…';
+      lyr = await attachLyrics(lyrics);
+    }
+
     el.adBarFill.style.width = '100%';
-    el.adProgText.textContent = added + ' saved' + (skipped ? ' · ' + skipped + ' already there' : '') + (failed ? ' · ' + failed + ' failed' : '');
+    const parts = [];
+    if (list.length) parts.push(added + ' saved');
+    if (skipped) parts.push(skipped + ' already there');
+    if (failed) parts.push(failed + ' failed');
+    if (lyrics.length) parts.push(lyr + ' of ' + lyrics.length + ' lyrics attached');
+    el.adProgText.textContent = parts.join(' · ');
     busy = false;
     el.adFile.value = '';
 
@@ -84,6 +115,10 @@ Saregaana.register('add', (function () {
       S.bus.emit('library:changed');
       S.toast(added + (added === 1 ? ' song added' : ' songs added'));
       S.db.persist();                           // ask Android to keep them safe
+    } else if (lyr) {
+      S.toast(lyr + (lyr === 1 ? ' lyrics file attached' : ' lyrics files attached'));
+    } else if (lyrics.length && !list.length) {
+      S.toast('No song with the same file name was found');
     }
     showStorage();
   }

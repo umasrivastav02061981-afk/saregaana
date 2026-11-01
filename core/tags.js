@@ -143,5 +143,15 @@
     };
   }
 
-  S.tags = { read, _parseId3v2: parseId3v2, _clean: cleanName };
+  /* read a .lrc / .txt file as text (UTF-8, UTF-16 or old Windows text) */
+  async function readText(file) {
+    const b = new Uint8Array(await file.arrayBuffer());
+    if (b[0] === 0xFF && b[1] === 0xFE) return dec('utf-16le', b.subarray(2));
+    if (b[0] === 0xFE && b[1] === 0xFF) return dec('utf-16be', b.subarray(2));
+    const start = (b[0] === 0xEF && b[1] === 0xBB && b[2] === 0xBF) ? 3 : 0;
+    try { return new TextDecoder('utf-8', { fatal: true }).decode(b.subarray(start)); }
+    catch (e) { return dec('windows-1252', b.subarray(start)); }
+  }
+
+  S.tags = { read, readText, _parseId3v2: parseId3v2, _clean: cleanName };
 })();
