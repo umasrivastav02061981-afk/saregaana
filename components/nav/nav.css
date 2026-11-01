@@ -14,8 +14,7 @@
 }
 .nav-btn:active{transform:scale(.94)}
 .nav-ic{width:23px;height:23px;margin-bottom:2px;transition:filter .2s}
-.nav-btn b{font-family:var(--f-hand);font-weight:700;font-size:13.5px;line-height:1.1}
-.nav-btn small{font-family:var(--f-mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.nav-btn b{font-family:var(--f-body);font-weight:600;font-size:11.5px;line-height:1.15;letter-spacing:.02em}
 
 /* active tab: brass colour + a little glowing lamp above */
 .nav-btn.active{color:var(--accent)}
@@ -28,7 +27,7 @@
 /* middle "Add" button sticks out like a brass knob */
 .nav-btn.add{color:var(--paper)}
 .nav-plus{
-  display:grid;place-items:center;width:50px;height:50px;margin-top:-26px;margin-bottom:2px;border-radius:50%;color:#2b1a10;
+  display:grid;place-items:center;width:50px;height:50px;margin-top:-18px;margin-bottom:2px;border-radius:50%;color:#2b1a10;
   background:radial-gradient(circle at 35% 28%,#f6dc92,var(--accent) 55%,#8a5f14);
   box-shadow:0 0 0 4px var(--wood-d),0 6px 14px rgba(0,0,0,.55),inset 0 -3px 5px rgba(0,0,0,.25);
 }

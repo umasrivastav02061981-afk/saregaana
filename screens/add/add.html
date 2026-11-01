@@ -1,0 +1,28 @@
+<section class="ad">
+
+  <header class="ad-head">
+    <p class="ad-kick">NEW RECORD</p>
+    <h1>Add songs</h1>
+    <p class="ad-copy">Pick songs from your phone's storage. They are saved inside Saregaana, so they play offline.</p>
+  </header>
+
+  <button class="ad-drop" id="adPick" type="button">
+    <span class="ad-disc"><i></i></span>
+    <b>Choose songs</b>
+    <em>mp3 works best — song name, singer, film &amp; year are read from the file</em>
+  </button>
+  <input type="file" id="adFile" accept="audio/*,.mp3,.m4a,.aac,.flac,.wav,.ogg,.opus" multiple hidden>
+
+  <div class="ad-prog" id="adProg" hidden>
+    <div class="ad-bar"><i id="adBarFill"></i></div>
+    <p class="ad-prog-t" id="adProgText"></p>
+    <ul class="ad-log" id="adLog"></ul>
+  </div>
+
+  <p class="ad-store" id="adStore"></p>
+
+  <h2 class="ad-sub">Your songs <span class="ad-n" id="adCount">0</span></h2>
+  <ul class="ad-list" id="adList"></ul>
+  <p class="ad-empty" id="adEmpty" hidden>Nothing here yet. Tap “Choose songs” to start your collection.</p>
+
+</section>

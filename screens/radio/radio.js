@@ -44,7 +44,7 @@ Saregaana.register('radio', (function () {
   function countText(st) {
     // Step 2 will add Saregaana.library.count(stationId). Until then: 0 songs.
     const n = (S.library && S.library.count && S.library.count(st.id)) || 0;
-    return n ? n + ' गाने · ' + n + ' songs' : 'अभी कोई गाना नहीं · No songs yet — add some!';
+    return n ? n + (n === 1 ? ' song' : ' songs') + ' on this station' : 'No songs yet — add some!';
   }
 
   function showStation(st) {
@@ -169,11 +169,15 @@ Saregaana.register('radio', (function () {
     on(el.rdPlay, 'click', () => {
       if (!locked) return;
       const n = (S.library && S.library.count && S.library.count(locked.id)) || 0;
-      if (!n) { S.toast('पहले गाने जोड़ें · Add songs first'); return; }
-      S.bus.emit('station:play', locked);
+      if (!n) { S.toast('Add songs first'); return; }
+      S.bus.emit('station:play', locked);   // core/player.js listens and starts the station
+      S.go('player');
     });
     on(el.rdAdd, 'click', () => S.go('add'));
     S.$$('[data-go]', root).forEach((b) => on(b, 'click', () => S.go(b.dataset.go)));
+
+    // keep the song count fresh when songs are added or deleted
+    offs.push(S.bus.on('library:changed', () => { if (locked) showStation(locked); }));
 
     // start on the last station you used
     const saved = STATIONS.find((s) => s.id === S.store.get('station', 'old')) || STATIONS[0];

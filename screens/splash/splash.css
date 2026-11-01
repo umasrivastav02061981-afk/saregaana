@@ -20,13 +20,14 @@
 @keyframes sp-spin{to{transform:rotate(360deg)}}
 
 .sp-title{
-  font-family:var(--f-display);font-weight:400;font-size:58px;line-height:1.05;color:var(--paper);
+  font-family:var(--f-hi);font-weight:400;font-size:62px;line-height:1.05;color:var(--paper);
   text-shadow:0 3px 0 var(--accent-2),0 0 28px rgba(var(--glow),.5);
   animation:sp-glow 1.6s ease-out both;
 }
 @keyframes sp-glow{from{opacity:0;letter-spacing:.2em;filter:blur(6px)}to{opacity:1;letter-spacing:0;filter:none}}
-.sp-sub{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;color:var(--accent)}
+.sp-en{margin-top:-4px;font-family:var(--f-italic);font-style:italic;font-weight:500;font-size:34px;letter-spacing:.03em;color:var(--accent);text-shadow:0 0 22px rgba(var(--glow),.45);animation:sp-glow 1.8s .2s ease-out both}
+.sp-sub{margin-top:2px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.26em;color:var(--muted)}
 .sp-bar{width:180px;height:5px;margin-top:10px;border-radius:3px;background:rgba(241,227,195,.14);overflow:hidden}
 .sp-bar i{display:block;height:100%;width:0;border-radius:3px;background:var(--accent);box-shadow:0 0 10px rgba(var(--glow),.8);animation:sp-load 2.2s ease-in-out forwards}
 @keyframes sp-load{to{width:100%}}
-.sp-tip{font-family:var(--f-hand);font-size:14px;color:var(--muted)}
+.sp-tip{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--muted)}

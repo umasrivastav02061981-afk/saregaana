@@ -1,0 +1,24 @@
+/* ===== mini.css — little player bar above the navigation ===== */
+.mini{
+  position:relative;display:flex;align-items:center;gap:4px;margin:0 8px 24px;padding:7px 8px 9px 7px;overflow:hidden;
+  border-radius:12px;border:1px solid rgba(224,168,46,.5);
+  background:
+    repeating-linear-gradient(92deg,rgba(0,0,0,.12) 0 2px,transparent 2px 7px),
+    linear-gradient(var(--wood),var(--wood-d));
+  box-shadow:0 8px 22px rgba(0,0,0,.5);
+}
+.mini[hidden],.mini.on-player{display:none}
+.mini-main{display:flex;align-items:center;gap:11px;flex:1;min-width:0;text-align:left}
+.mini-cover{width:44px;height:44px;border-radius:4px;flex:none}
+.mini-meta{min-width:0;display:flex;flex-direction:column;gap:1px}
+.mini-meta b{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-meta span{font-size:12px;color:rgba(241,227,195,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-btn{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;flex:none;color:var(--paper)}
+.mini-btn svg{width:23px;height:23px;grid-area:1/1}
+.mini-btn:active{background:rgba(255,255,255,.12)}
+#miniPlay{background:var(--accent);color:#24160c}
+#miniPlay .i-pause{display:none}
+.mini.is-playing #miniPlay .i-play{display:none}
+.mini.is-playing #miniPlay .i-pause{display:block}
+.mini-prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(0,0,0,.4)}
+.mini-prog i{display:block;height:100%;width:0;background:var(--accent);box-shadow:0 0 8px rgba(var(--glow),.8)}

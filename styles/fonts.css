@@ -1,11 +1,64 @@
-/* ===== fonts.css — Hindi + English fonts (free Google Fonts) =====
-   Needs internet the first time; Step 6 (sw.js) will cache them for offline. */
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Kalam:wght@300;400;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Rozha+One&family=Yatra+One&display=swap');
+/* ===== fonts.css — ALL fonts of the app live in this one file =====
+
+   The rest of the app only uses these names:
+     --f-hi       HINDI headings   (greeting, radio stations, splash title)
+     --f-display  ENGLISH headings (Add songs, song titles, ...)
+     --f-italic   italic English   ("Saregaana" under the Hindi on the splash)
+     --f-hand     handwritten labels (station buttons)
+     --f-body     normal English text, buttons, menus (also shows Hindi)
+     --f-mono     tiny labels
+
+   HOW TO CHANGE THE LOOK
+   1. Replace the @import line (it downloads the fonts)
+   2. Replace the names inside :root { ... }
+   Nothing else in the app needs to change.
+
+   TIPS
+   - The first name is used for English letters. If it has no Hindi, the next
+     name is used for Hindi letters automatically.
+   - Display fonts have ONE weight. Keep font-weight at 400 for them.
+   - More Hindi fonts to try: Yatra One, Rozha One, Eczar, Modak, Amita,
+     Tillana, Kalam, Sahitya, Khand, Hind, Mukta, Baloo 2, Karma, Laila
+   - More italic English fonts: Playfair Display, DM Serif Display,
+     Cormorant Garamond, Lora, Libre Baskerville
+*/
+
+/* ---------- PRESET 1 (ACTIVE): Poster ---------- */
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Kalam:wght@400;700&family=Playfair+Display:ital,wght@1,500;1,700&family=Poppins:wght@400;500;600;700&family=Rozha+One&family=Yatra+One&display=swap');
 
 :root{
-  --f-display:'Yatra One','Rozha One',serif;          /* big poster headings */
-  --f-title:'Rozha One','Yatra One',serif;            /* bold titles */
-  --f-hand:'Kalam','Noto Sans Devanagari',cursive;    /* handwritten cassette labels */
-  --f-body:'Noto Sans Devanagari','Segoe UI',system-ui,sans-serif;
-  --f-mono:'DM Mono',ui-monospace,monospace;          /* tiny labels */
+  --f-hi:'Yatra One','Rozha One',serif;
+  --f-display:'Rozha One','Yatra One',serif;
+  --f-italic:'Playfair Display','Rozha One',serif;
+  --f-hand:'Kalam',cursive;
+  --f-body:'Poppins','Noto Sans Devanagari',system-ui,sans-serif;
+  --f-mono:'DM Mono',ui-monospace,monospace;
 }
+
+/* ---------- PRESET 2: Filmi 70s ----------
+   To use: delete the PRESET 1 @import and :root above, then remove the comment marks here.
+
+@import url('https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=DM+Mono:wght@400;500&family=Eczar:wght@500;700&family=Limelight&family=Playfair+Display:ital,wght@1,500;1,700&family=Poppins:wght@400;500;600;700&display=swap');
+:root{
+  --f-hi:'Eczar','Amita',serif;
+  --f-display:'Limelight','Eczar',serif;
+  --f-italic:'Playfair Display','Eczar',serif;
+  --f-hand:'Amita',cursive;
+  --f-body:'Poppins','Noto Sans Devanagari',system-ui,sans-serif;
+  --f-mono:'DM Mono',ui-monospace,monospace;
+}
+*/
+
+/* ---------- PRESET 3: Chunky Bollywood ----------
+   To use: same steps as preset 2.
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@1&family=Modak&family=Poppins:wght@400;500;600;700&family=Rozha+One&family=Tillana:wght@500;700&display=swap');
+:root{
+  --f-hi:'Modak','Rozha One',serif;
+  --f-display:'Rozha One','Modak',serif;
+  --f-italic:'DM Serif Display','Rozha One',serif;
+  --f-hand:'Tillana',cursive;
+  --f-body:'Poppins','Noto Sans Devanagari',system-ui,sans-serif;
+  --f-mono:'DM Mono',ui-monospace,monospace;
+}
+*/

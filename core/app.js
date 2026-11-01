@@ -43,13 +43,23 @@
   async function boot() {
     document.body.dataset.theme = S.store.get('theme', 'radio');
 
-    // components that live on every screen
+    // 1. the song database (if it fails, the app still opens, just with no songs)
+    try { await S.db.init(); }
+    catch (e) { S.log('db', e); }
+
+    // 2. parts that live on every screen
+    const parts = document.createElement('div');       // hidden holder for the song-row template
+    parts.hidden = true;
+    document.body.appendChild(parts);
     await Promise.all([
       S.load('components', 'toast', document.getElementById('toast')),
-      S.load('components', 'nav', document.getElementById('nav'))
+      S.load('components', 'nav', document.getElementById('nav')),
+      S.load('components', 'mini', document.getElementById('mini')),
+      S.load('components', 'row', parts)
     ]);
+    try { S.player.restore(); } catch (e) { S.log('restore', e); }
 
-    // splash first, then the real home screen
+    // 3. splash first, then the real home screen
     let started = false;
     const start = () => {
       if (started) return;

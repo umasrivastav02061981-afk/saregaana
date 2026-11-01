@@ -50,7 +50,7 @@
     }
     if (onRetry) {
       const b = document.createElement('button');
-      b.textContent = 'फिर कोशिश करें · Retry'; b.onclick = onRetry; box.appendChild(b);
+      b.textContent = 'Retry'; b.onclick = onRetry; box.appendChild(b);
     }
     return box;
   }
@@ -65,7 +65,7 @@
       const api = registry[name];
 
       if (!html.trim() && !api) {                      // files exist but are empty
-        mount.appendChild(card('अभी बन रहा है', 'Coming soon: ' + name));
+        mount.appendChild(card('Coming soon', 'This part is not built yet · ' + name));
         return null;
       }
       mount.innerHTML = html;
@@ -74,12 +74,12 @@
 
     } catch (e) {
       if (e.status === 404) {                          // folder/file not created yet
-        mount.appendChild(card('अभी बन रहा है', 'Coming soon: ' + name, base + '.html'));
+        mount.appendChild(card('Coming soon', 'This part is not built yet · ' + name, base + '.html'));
         return null;
       }
       S.log('load:' + name, e);
       mount.textContent = '';
-      mount.appendChild(card('इस हिस्से में दिक्कत है',
+      mount.appendChild(card('Section issue',
         'This section has an issue — the rest of the app still works.',
         name + ' — ' + e.message, () => S.load(kind, name, mount)));
       return null;

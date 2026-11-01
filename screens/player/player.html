@@ -1,0 +1,76 @@
+<section class="pl" id="plRoot">
+
+  <header class="pl-top">
+    <button class="pl-ic" id="plBack" type="button" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg>
+    </button>
+    <div class="pl-top-t"><small>NOW PLAYING</small><b>Gramophone</b></div>
+    <button class="pl-ic" id="plQBtn" type="button" aria-label="Up next" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+    </button>
+  </header>
+
+  <!-- shown when nothing is loaded -->
+  <div class="pl-empty" id="plEmpty" hidden>
+    <div class="pl-empty-disc"></div>
+    <h2>Nothing playing</h2>
+    <p>Tune the radio and press Play, or add songs first.</p>
+    <div class="pl-empty-btns">
+      <button type="button" data-go="radio">Open radio</button>
+      <button type="button" data-go="add">+ Add songs</button>
+    </div>
+  </div>
+
+  <div class="pl-main" id="plMain">
+    <!-- the gramophone -->
+    <div class="pl-deck">
+      <div class="pl-disc" id="plDisc"><div class="pl-label fb" id="plLabel"></div></div>
+      <div class="pl-arm" aria-hidden="true">
+        <svg viewBox="0 0 100 220">
+          <circle cx="78" cy="26" r="15" fill="#c9973f" stroke="#2a170c" stroke-width="3"/>
+          <circle cx="78" cy="26" r="6" fill="#2a170c"/>
+          <path d="M78 26 L78 124 L46 186" fill="none" stroke="#2a170c" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M78 26 L78 124 L46 186" fill="none" stroke="#d6d9db" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="33" y="182" width="24" height="13" rx="3" transform="rotate(-38 45 188)" fill="#2b1a10" stroke="#c9973f" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="pl-info">
+      <h1 id="plTitle">—</h1>
+      <p id="plSub"></p>
+    </div>
+
+    <div class="pl-seek">
+      <span id="plCur">0:00</span>
+      <input id="plRange" type="range" min="0" max="1000" value="0" aria-label="Seek">
+      <span id="plTot">0:00</span>
+    </div>
+
+    <div class="pl-ctrl">
+      <button class="pl-c" id="plShuffle" type="button" aria-label="Shuffle" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+      </button>
+      <button class="pl-c" id="plPrev" type="button" aria-label="Previous">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM9.5 12l8.5 6V6z"/></svg>
+      </button>
+      <button class="pl-play" id="plPlay" type="button" aria-label="Play or pause">
+        <svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+      </button>
+      <button class="pl-c" id="plNext" type="button" aria-label="Next">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+      </button>
+      <button class="pl-c" id="plRepeat" type="button" aria-label="Repeat" aria-pressed="false" data-mode="off">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        <i>1</i>
+      </button>
+    </div>
+  </div>
+
+  <section class="pl-queue" id="plQueue" hidden>
+    <h2>Up next</h2>
+    <ul id="plList"></ul>
+  </section>
+
+</section>
