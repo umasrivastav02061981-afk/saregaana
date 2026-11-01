@@ -1,0 +1,29 @@
+<section class="lb">
+
+  <header class="lb-head">
+    <h1>Library</h1>
+    <span class="lb-count" id="lbCount"></span>
+  </header>
+
+  <label class="lb-search" id="lbSearchWrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="lbSearch" type="search" placeholder="Search songs, films, singers" autocomplete="off" enterkeyhint="search">
+    <button type="button" id="lbClear" aria-label="Clear search" hidden>×</button>
+  </label>
+
+  <div class="lb-tabs" id="lbTabs" role="tablist">
+    <button type="button" class="on" data-tab="songs" role="tab">Songs</button>
+    <button type="button" data-tab="films" role="tab">Films</button>
+    <button type="button" data-tab="singers" role="tab">Singers</button>
+    <button type="button" data-tab="eras" role="tab">Eras</button>
+  </div>
+
+  <div class="lb-tools" id="lbTools">
+    <button type="button" class="lb-chip on" data-sort="recent">Recent</button>
+    <button type="button" class="lb-chip" data-sort="az">A – Z</button>
+    <button type="button" class="lb-chip lb-shuffle" id="lbShuffleAll">⤮ Shuffle all</button>
+  </div>
+
+  <div class="lb-view" id="lbView"></div>
+
+</section>

@@ -26,9 +26,10 @@ Saregaana.register('add', (function () {
       el.adList.appendChild(S.row.create(song, {
         onClick: () => S.bus.emit('song:play', { ids, index: i }),
         onDelete: async (sg) => {
-          if (!window.confirm('Delete “' + sg.title + '” from Saregaana?')) return;
-          try { await S.db.removeSong(sg.id); S.toast('Deleted · हटा दिया'); }
-          catch (e) { S.log('delete', e); S.toast('Could not delete · हट नहीं पाया'); }
+          const ok = await S.modal.confirm({ title: 'Delete song?', text: '“' + sg.title + '” will be removed from this phone.', yes: 'Delete', danger: true });
+          if (!ok) return;
+          try { await S.db.removeSong(sg.id); S.toast('Song deleted'); }
+          catch (e) { S.log('delete', e); S.toast('Could not delete the song'); }
         }
       }));
     });
@@ -47,7 +48,7 @@ Saregaana.register('add', (function () {
   async function handle(files) {
     if (busy) return;
     const list = Array.from(files).filter((f) => /^audio\//.test(f.type) || AUDIO_EXT.test(f.name));
-    if (!list.length) { S.toast('No songs found · कोई गाना नहीं मिला'); return; }
+    if (!list.length) { S.toast('No songs found'); return; }
 
     busy = true;
     el.adProg.hidden = false;
@@ -81,7 +82,7 @@ Saregaana.register('add', (function () {
 
     if (added) {
       S.bus.emit('library:changed');
-      S.toast(added + (added === 1 ? ' song added' : ' songs added') + ' · गाने जुड़ गए');
+      S.toast(added + (added === 1 ? ' song added' : ' songs added'));
       S.db.persist();                           // ask Android to keep them safe
     }
     showStorage();

@@ -48,14 +48,19 @@
     catch (e) { S.log('db', e); }
 
     // 2. parts that live on every screen
-    const parts = document.createElement('div');       // hidden holder for the song-row template
-    parts.hidden = true;
-    document.body.appendChild(parts);
+    const holder = () => {                             // hidden box for components that only give templates
+      const d = document.createElement('div');
+      d.hidden = true;
+      document.body.appendChild(d);
+      return d;
+    };
     await Promise.all([
       S.load('components', 'toast', document.getElementById('toast')),
       S.load('components', 'nav', document.getElementById('nav')),
       S.load('components', 'mini', document.getElementById('mini')),
-      S.load('components', 'row', parts)
+      S.load('components', 'modal', document.getElementById('modal')),
+      S.load('components', 'row', holder()),
+      S.load('components', 'poster', holder())
     ]);
     try { S.player.restore(); } catch (e) { S.log('restore', e); }
 

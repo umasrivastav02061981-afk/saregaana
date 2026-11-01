@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   const S = window.Saregaana;
-  const NAME = 'saregaana', VER = 1;
+  const NAME = 'saregaana', VER = 2;
   let db = null;
   const coverCache = new Map();               // song id -> picture URL (or null)
 
@@ -22,6 +22,7 @@
         if (!d.objectStoreNames.contains('songs')) d.createObjectStore('songs', { keyPath: 'id' });
         if (!d.objectStoreNames.contains('files')) d.createObjectStore('files');
         if (!d.objectStoreNames.contains('covers')) d.createObjectStore('covers');
+        if (!d.objectStoreNames.contains('posters')) d.createObjectStore('posters');   // film posters you pick
       };
       r.onsuccess = () => res(r.result);
       r.onerror = () => rej(r.error);
@@ -81,6 +82,35 @@
       await finish(t);
       rebuild(lib.list.map((s) => (s.id === id ? song : s)));
       S.bus.emit('library:changed');
+    },
+
+    // change the same fields on many songs at once (one refresh at the end)
+    async updateMany(ids, patch) {
+      const t = db.transaction('songs', 'readwrite');
+      const store = t.objectStore('songs');
+      const changed = new Map();
+      ids.forEach((id) => {
+        const old = lib.map.get(id);
+        if (!old) return;
+        const song = Object.assign({}, old, patch);
+        store.put(song);
+        changed.set(id, song);
+      });
+      await finish(t);
+      rebuild(lib.list.map((s) => changed.get(s.id) || s));
+      S.bus.emit('library:changed');
+    },
+
+    getPoster(key) { return req(db.transaction('posters').objectStore('posters').get(key)); },
+    async putPoster(key, blob) {
+      const t = db.transaction('posters', 'readwrite');
+      t.objectStore('posters').put(blob, key);
+      await finish(t);
+    },
+    async deletePoster(key) {
+      const t = db.transaction('posters', 'readwrite');
+      t.objectStore('posters').delete(key);
+      await finish(t);
     },
 
     async removeSong(id) {
