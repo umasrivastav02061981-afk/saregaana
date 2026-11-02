@@ -1,11 +1,12 @@
+
 {
-  "id": "./",
+  "id": "/saregaana/",
   "name": "Saregaana - Your Music Vault",
   "short_name": "Saregaana",
   "description": "Your personal retro Bollywood music vault.",
   "lang": "en-IN",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/saregaana/",
+  "scope": "/saregaana/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#1a0f0a",
@@ -13,8 +14,8 @@
   "categories": ["music", "entertainment"],
   "icons": [
     {
-      "src": "./assets/icons/icon.svg",
-      "sizes": "any",
+      "src": "/saregaana/assets/icons/icon.svg",
+      "sizes": "192x192 512x512",
       "type": "image/svg+xml",
       "purpose": "any"
     }
