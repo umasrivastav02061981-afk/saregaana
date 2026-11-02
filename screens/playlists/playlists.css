@@ -59,25 +59,46 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 7px;
+  flex-wrap: nowrap;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .ls-studio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  min-height: 40px;
   padding: 10px 12px;
-  border: 1px solid rgba(241,227,195,.35);
+  border: 1px solid rgba(241,227,195,.45);
   border-radius: 999px;
   color: var(--paper);
   font-size: 11px;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
-.ls-studio:active {
-  background: rgba(241,227,195,.12);
+.ls-new {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 @media (max-width: 390px) {
-  .ls-head-actions { gap: 5px; }
-  .ls-studio { padding: 9px 10px; font-size: 10px; }
-  .ls-new { padding: 9px 12px; font-size: 12px; }
+  .ls-head {
+    gap: 6px;
+  }
+
+  .ls-head h1 {
+    font-size: 30px;
+  }
+
+  .ls-head-actions {
+    gap: 5px;
+  }
+
+  .ls-studio {
+    padding: 9px 10px;
+    font-size: 10px;
+  }
 }
