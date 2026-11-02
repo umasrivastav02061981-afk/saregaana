@@ -36,3 +36,136 @@ body.booting #nav,body.booting #mini{display:none}
 .sg-msg button{margin-top:16px;padding:10px 22px;border-radius:999px;background:var(--accent);color:#24160c;font-weight:700}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ==========================================
+   SAREGAANA — MOBILE APP EXPERIENCE
+   ========================================== */
+
+html,
+body {
+  width: 100%;
+  min-width: 0;
+  overscroll-behavior: none;
+}
+
+#app {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Installed PWA: use the available screen */
+@media (display-mode: standalone) {
+  html,
+  body {
+    overflow: hidden;
+  }
+
+  #app {
+    max-width: none;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+/* Every screen must respect the device width */
+.screen-wrap,
+.screen-wrap section {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.screen-wrap img,
+.screen-wrap svg,
+.screen-wrap video {
+  max-width: 100%;
+}
+
+#screen {
+  width: 100%;
+  min-width: 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Comfortable mobile touch controls */
+.screen-wrap button,
+.nav-bar button {
+  touch-action: manipulation;
+}
+
+/* Prevent long song names from breaking layouts */
+.screen-wrap h1,
+.screen-wrap h2,
+.screen-wrap h3,
+.screen-wrap p,
+.screen-wrap b,
+.screen-wrap span {
+  overflow-wrap: anywhere;
+}
+
+/* Small phone optimisation */
+@media (max-width: 390px) {
+  .screen-wrap .radio,
+  .screen-wrap .lb,
+  .screen-wrap .ad,
+  .screen-wrap .ls,
+  .screen-wrap .pl,
+  .screen-wrap .pf-screen,
+  .screen-wrap .st-screen {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .screen-wrap .rd-hi {
+    font-size: 29px;
+  }
+
+  .screen-wrap .lb-head h1,
+  .screen-wrap .ls-head h1,
+  .screen-wrap .ad-head h1,
+  .screen-wrap .pf-header h1,
+  .screen-wrap .st-header h1 {
+    font-size: clamp(28px, 8vw, 33px);
+  }
+
+  .screen-wrap .radio {
+    gap: 16px;
+  }
+
+  .screen-wrap .ls-grid {
+    gap: 14px 10px;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width: 340px) {
+  .nav-btn b {
+    font-size: 10px;
+  }
+
+  .nav-ic {
+    width: 21px;
+    height: 21px;
+  }
+
+  .nav-plus {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Landscape phone */
+@media (max-height: 500px) and (orientation: landscape) {
+  #screen {
+    overflow-y: auto;
+  }
+
+  .screen-wrap .pl-deck {
+    width: min(55vw, 250px);
+    margin-top: 10px;
+  }
+}
