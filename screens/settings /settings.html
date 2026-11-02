@@ -1,0 +1,193 @@
+
+<section class="st-screen" id="stRoot">
+
+  <header class="st-header">
+    <div>
+      <p class="st-eyebrow">MAKE IT YOURS</p>
+      <h1>Settings</h1>
+      <p class="st-subtitle">Your music space, your way.</p>
+    </div>
+    <div class="st-header-icon" aria-hidden="true">⚙</div>
+  </header>
+
+  <!-- APPEARANCE -->
+  <section class="st-section">
+    <div class="st-heading">
+      <div>
+        <p class="st-eyebrow">THE LOOK</p>
+        <h2>Appearance</h2>
+      </div>
+      <span class="st-tag">3 THEMES</span>
+    </div>
+
+    <div class="st-theme-grid">
+
+      <button class="st-theme-card" type="button"
+              data-theme="radio" aria-pressed="false">
+        <span class="st-theme-preview st-radio-preview">
+          <i></i><i></i><i></i>
+        </span>
+        <span class="st-theme-info">
+          <b>Vintage Radio</b>
+          <small>Warm wood & golden tones</small>
+        </span>
+        <span class="st-theme-check">✓</span>
+      </button>
+
+      <button class="st-theme-card" type="button"
+              data-theme="gramophone" aria-pressed="false">
+        <span class="st-theme-preview st-gram-preview">
+          <i></i><i></i><i></i>
+        </span>
+        <span class="st-theme-info">
+          <b>Gramophone</b>
+          <small>Deep burgundy & antique gold</small>
+        </span>
+        <span class="st-theme-check">✓</span>
+      </button>
+
+      <button class="st-theme-card" type="button"
+              data-theme="cassette" aria-pressed="false">
+        <span class="st-theme-preview st-cass-preview">
+          <i></i><i></i><i></i>
+        </span>
+        <span class="st-theme-info">
+          <b>Cassette</b>
+          <small>Retro blue & orange</small>
+        </span>
+        <span class="st-theme-check">✓</span>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- STORAGE -->
+  <section class="st-section">
+    <div class="st-heading">
+      <div>
+        <p class="st-eyebrow">YOUR DEVICE</p>
+        <h2>Storage</h2>
+      </div>
+      <span class="st-storage-icon">▤</span>
+    </div>
+
+    <div class="st-card">
+      <div class="st-storage-top">
+        <div>
+          <p class="st-card-label">BROWSER STORAGE USED</p>
+          <strong id="stStorageUsed">Checking…</strong>
+        </div>
+        <span class="st-storage-symbol">♫</span>
+      </div>
+
+      <div class="st-meter">
+        <span id="stStorageBar"></span>
+      </div>
+
+      <div class="st-storage-bottom">
+        <span id="stStoragePercent">Calculating usage</span>
+        <span id="stStorageQuota"></span>
+      </div>
+
+      <p class="st-hint">
+        This estimate includes data stored by Saregaana and may include
+        other browser data. It is not a separate measurement of your songs.
+      </p>
+
+      <button class="st-action-button" id="stRefreshStorage" type="button">
+        ↻ Refresh storage information
+      </button>
+    </div>
+  </section>
+
+  <!-- DATA PROTECTION -->
+  <section class="st-section">
+    <div class="st-heading">
+      <div>
+        <p class="st-eyebrow">KEEP YOUR COLLECTION</p>
+        <h2>Data protection</h2>
+      </div>
+    </div>
+
+    <div class="st-card st-protect-card">
+      <div class="st-protect-icon">⌑</div>
+      <div class="st-protect-copy">
+        <b>Persistent storage</b>
+        <p id="stPersistStatus">
+          Check whether your browser protects Saregaana's stored data.
+        </p>
+      </div>
+      <button class="st-small-button" id="stPersist" type="button">
+        Request
+      </button>
+    </div>
+
+    <p class="st-hint st-outside-hint">
+      Your music is stored locally in your browser. Persistent storage
+      is a browser request, not a cloud backup. Keep your original audio
+      files somewhere safe too.
+    </p>
+  </section>
+
+  <!-- COLLECTION -->
+  <section class="st-section">
+    <div class="st-heading">
+      <div>
+        <p class="st-eyebrow">YOUR MUSIC VAULT</p>
+        <h2>Collection overview</h2>
+      </div>
+    </div>
+
+    <div class="st-count-grid">
+      <div class="st-count-card">
+        <span>♫</span>
+        <strong id="stSongCount">0</strong>
+        <small>SONGS</small>
+      </div>
+
+      <div class="st-count-card">
+        <span>▤</span>
+        <strong id="stPlaylistCount">0</strong>
+        <small>PLAYLISTS</small>
+      </div>
+    </div>
+
+    <button class="st-row-button" id="stProfile" type="button">
+      <span class="st-row-icon">♙</span>
+      <span class="st-row-copy">
+        <b>My profile</b>
+        <small>Manage your listener identity</small>
+      </span>
+      <span class="st-row-arrow">›</span>
+    </button>
+  </section>
+
+  <!-- DIAGNOSTICS -->
+  <section class="st-section">
+    <div class="st-heading">
+      <div>
+        <p class="st-eyebrow">TROUBLESHOOTING</p>
+        <h2>App diagnostics</h2>
+      </div>
+    </div>
+
+    <button class="st-row-button" id="stErrors" type="button">
+      <span class="st-row-icon">⌘</span>
+      <span class="st-row-copy">
+        <b>Error log</b>
+        <small>View recorded app issues</small>
+      </span>
+      <span class="st-row-arrow">›</span>
+    </button>
+  </section>
+
+  <!-- ABOUT -->
+  <footer class="st-footer">
+    <div class="st-footer-record">♫</div>
+    <h3>सारेगाना · Saregaana</h3>
+    <p>YOUR MUSIC. YOUR MEMORIES.</p>
+    <small>Made for the love of old melodies.</small>
+    <span class="st-version">LOCAL MUSIC EXPERIENCE</span>
+  </footer>
+
+</section>
