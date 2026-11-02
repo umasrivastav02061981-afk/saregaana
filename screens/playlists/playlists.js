@@ -165,6 +165,9 @@ Saregaana.register('playlists', (function () {
     el.lsHead = root.querySelector('.ls-head');
     el.lsView = root.querySelector('#lsView');
     root.querySelector('#lsNew').addEventListener('click', newSheet);
+    root.querySelector('#lsStudio').addEventListener('click', () => {
+  S.go('mixtape');
+});
     offs.push(S.bus.on('playlists:changed', render));
     offs.push(S.bus.on('library:changed', render));
     render();

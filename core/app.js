@@ -5,7 +5,7 @@
   const screenEl = document.getElementById('screen');
 
   // every screen name the app knows (unbuilt ones show "Coming soon")
-  const ROUTES = ['radio', 'library', 'add', 'playlists', 'profile', 'settings', 'player', 'lyrics', 'stats'];
+  const ROUTES = ['radio', 'library', 'add', 'playlists', 'mixtape', 'profile', 'settings', 'player', 'lyrics', 'stats'];
   let current = { name: null, api: null };
   let token = 0;                                       // stops old, slow loads from winning
 

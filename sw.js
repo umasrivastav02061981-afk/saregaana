@@ -1,6 +1,6 @@
 /* ===== Saregaana Service Worker ===== */
 
-const CACHE_NAME = 'saregaana-shell-v2';
+const CACHE_NAME = 'saregaana-shell-v3';
 
 const CORE_FILES = [
   './',
@@ -85,8 +85,12 @@ const CORE_FILES = [
   './screens/stats/stats.html',
   './screens/stats/stats.css',
   './screens/stats/stats.js',
+  './screens/mixtape/mixtape.html',
+'./screens/mixtape/mixtape.css',
+'./screens/mixtape/mixtape.js',
 
   './assets/icons/icon.svg'
+  
 ];
 
 /* Install: cache available application files */

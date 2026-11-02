@@ -1,0 +1,95 @@
+
+<section class="mx-screen">
+  <header class="mx-header">
+    <button class="mx-back" id="mxBack" type="button">← Playlists</button>
+    <span class="mx-kicker">SAREGAANA ORIGINALS · VOL. 01</span>
+    <h1>Mixtape <em>Studio.</em></h1>
+    <p>Make a little collection of songs that means something.</p>
+  </header>
+
+  <div class="mx-preview" id="mxPreview">
+    <div class="mx-preview-top">
+      <span>YOUR PERSONAL MIXTAPE</span>
+      <span>SG · 001</span>
+    </div>
+    <div class="mx-cover">
+      <div class="mx-cover-ring"></div>
+      <div class="mx-cover-center">♪</div>
+    </div>
+    <div class="mx-preview-bottom">
+      <div>
+        <h2 id="mxPreviewTitle">Untitled Mixtape</h2>
+        <p id="mxPreviewMood">A collection of memories</p>
+      </div>
+      <span id="mxPreviewCount">0 TRACKS</span>
+    </div>
+  </div>
+
+  <section class="mx-section">
+    <div class="mx-section-heading">
+      <span>01 / THE IDENTITY</span>
+      <small>Give it a name</small>
+    </div>
+
+    <label class="mx-field">
+      <span>MIXTAPE TITLE</span>
+      <input id="mxTitle" maxlength="36" placeholder="e.g. Songs from another time">
+    </label>
+
+    <label class="mx-field">
+      <span>A LITTLE DESCRIPTION</span>
+      <input id="mxNote" maxlength="90" placeholder="A memory, a feeling, a story...">
+    </label>
+
+    <label class="mx-field">
+      <span>CHOOSE ITS MOOD</span>
+      <select id="mxMood">
+        <option value="A collection of memories">Nostalgic</option>
+        <option value="For the hopeless romantics">Romantic</option>
+        <option value="For slow and quiet evenings">Peaceful</option>
+        <option value="A little old-school magic">Old-school</option>
+        <option value="For the happy days">Cheerful</option>
+        <option value="Melodies that stay forever">Evergreen</option>
+      </select>
+    </label>
+
+    <div class="mx-field">
+      <span>CHOOSE YOUR COVER COLOUR</span>
+      <div class="mx-swatches" id="mxSwatches">
+        <button type="button" class="mx-swatch active" data-color="#762b36" aria-label="Maroon"></button>
+        <button type="button" class="mx-swatch" data-color="#a64b4b" aria-label="Rose red"></button>
+        <button type="button" class="mx-swatch" data-color="#704b3e" aria-label="Brown"></button>
+        <button type="button" class="mx-swatch" data-color="#8b665c" aria-label="Dusty rose"></button>
+        <button type="button" class="mx-swatch" data-color="#465b50" aria-label="Vintage green"></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-section">
+    <div class="mx-section-heading">
+      <span>02 / THE SOUNDTRACK</span>
+      <small id="mxSelected">0 selected</small>
+    </div>
+
+    <input class="mx-search" id="mxSearch" type="search" placeholder="Search your music library...">
+
+    <div class="mx-song-list" id="mxSongList"></div>
+    <p class="mx-empty" id="mxNoSongs" hidden>
+      Your music library is empty. Add some songs first.
+    </p>
+  </section>
+
+  <button class="mx-create" id="mxCreate" type="button">
+    CREATE MY MIXTAPE <span>↗</span>
+  </button>
+
+  <section class="mx-section mx-saved-section">
+    <div class="mx-section-heading">
+      <span>03 / YOUR COLLECTION</span>
+      <small>Saved mixtapes</small>
+    </div>
+    <div class="mx-saved" id="mxSaved"></div>
+  </section>
+
+  <footer class="mx-footer">MADE OF MUSIC · MADE OF MEMORIES</footer>
+</section>
