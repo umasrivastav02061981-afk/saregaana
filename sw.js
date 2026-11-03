@@ -1,6 +1,6 @@
 /* ===== Saregaana Service Worker ===== */
 
-const CACHE_NAME = 'saregaana-shell-v4';
+const CACHE_NAME = 'saregaana-shell-v5';
 
 const CORE_FILES = [
   './',

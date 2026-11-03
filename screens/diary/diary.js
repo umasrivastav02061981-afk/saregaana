@@ -1,63 +1,170 @@
 /* ==========================================
    SAREGAANA MUSIC DIARY
-   Phase 2 — Entry Management
+   Phase 3 — Rich Text + Photo Attachments
 ========================================== */
 
 Saregaana.register('diary', (function () {
   'use strict';
 
   const S = window.Saregaana;
+  const MAX_PHOTOS = 8;
+  const MAX_FILE_SIZE = 8 * 1024 * 1024;
+  const ALLOWED_TYPES = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/gif'
+  ];
 
   let root = null;
   let entries = [];
   let activeFilter = 'all';
   let searchTerm = '';
   let editingId = null;
+  let existingPhotos = [];
+  let removedPhotoIds = [];
+  let draftPhotos = [];
+  let objectUrls = [];
   let offs = [];
 
   /* ---------- HELPERS ---------- */
 
   function localDate() {
     const d = new Date();
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+    return [
+      d.getFullYear(),
+      String(d.getMonth() + 1).padStart(2, '0'),
+      String(d.getDate()).padStart(2, '0')
+    ].join('-');
   }
 
   function formatDate(value) {
     if (!value) return 'Date not set';
 
-    const date = new Date(value + 'T12:00:00');
+    const d = new Date(value + 'T12:00:00');
 
-    if (Number.isNaN(date.getTime())) {
-      return value;
-    }
+    if (Number.isNaN(d.getTime())) return value;
 
-    return date.toLocaleDateString('en-IN', {
+    return d.toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',
       year: 'numeric'
     });
   }
 
-  function createButton(label, action, id) {
-    const button = document.createElement('button');
-
-    button.type = 'button';
-    button.textContent = label;
-    button.dataset.action = action;
-
-    if (id) button.dataset.id = id;
-
-    return button;
+  function toast(message) {
+    if (typeof S.toast === 'function') S.toast(message);
   }
 
-  function showToast(message) {
-    if (typeof S.toast === 'function') {
-      S.toast(message);
+  function makeButton(label, action, id) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = label;
+    b.dataset.action = action;
+    if (id) b.dataset.id = id;
+    return b;
+  }
+
+  function escapeText(value) {
+    return String(value || '');
+  }
+
+  function registerUrl(url) {
+    objectUrls.push(url);
+    return url;
+  }
+
+  function clearObjectUrls() {
+    objectUrls.forEach(url => URL.revokeObjectURL(url));
+    objectUrls = [];
+  }
+
+  function clearDraftPhotos() {
+    clearObjectUrls();
+    draftPhotos = [];
+    existingPhotos = [];
+    removedPhotoIds = [];
+
+    const preview = root && root.querySelector('#mdPhotoPreview');
+    if (preview) preview.textContent = '';
+  }
+
+  /* ---------- RICH TEXT SANITISER ---------- */
+
+  const ALLOWED_TAGS = new Set([
+    'P', 'BR', 'STRONG', 'B', 'EM', 'I', 'U',
+    'H2', 'H3', 'UL', 'OL', 'LI', 'BLOCKQUOTE'
+  ]);
+
+  const BLOCK_TAGS = new Set([
+    'P', 'H2', 'H3', 'LI', 'BLOCKQUOTE'
+  ]);
+
+  function cleanNode(node, output) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      output.appendChild(document.createTextNode(node.nodeValue || ''));
+      return;
     }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+
+    const tag = node.tagName;
+
+    if (
+      tag === 'SCRIPT' || tag === 'STYLE' ||
+      tag === 'IFRAME' || tag === 'OBJECT' ||
+      tag === 'EMBED' || tag === 'SVG' ||
+      tag === 'MATH' || tag === 'FORM' ||
+      tag === 'INPUT' || tag === 'VIDEO' ||
+      tag === 'AUDIO'
+    ) {
+      return;
+    }
+
+    if (!ALLOWED_TAGS.has(tag)) {
+      Array.from(node.childNodes).forEach(child => {
+        cleanNode(child, output);
+      });
+      return;
+    }
+
+    const clean = document.createElement(tag.toLowerCase());
+
+    Array.from(node.childNodes).forEach(child => {
+      cleanNode(child, clean);
+    });
+
+    output.appendChild(clean);
+  }
+
+  function sanitiseHtml(html) {
+    const parser = new DOMParser();
+    const parsed = parser.parseFromString(
+      String(html || ''),
+      'text/html'
+    );
+
+    const result = document.createElement('div');
+
+    Array.from(parsed.body.childNodes).forEach(node => {
+      cleanNode(node, result);
+    });
+
+    return result.innerHTML;
+  }
+
+  function htmlToText(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(
+      String(html || ''),
+      'text/html'
+    );
+
+    return (doc.body.textContent || '')
+      .replace(/\u00a0/g, ' ')
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
   }
 
   /* ---------- LOAD DATA ---------- */
@@ -75,40 +182,33 @@ Saregaana.register('diary', (function () {
 
       entries = allEntries || [];
 
-      const entryCount = root.querySelector('#mdEntryCount');
-      const trashCount = root.querySelector('#mdTrashCount');
-      const photoCount = root.querySelector('#mdPhotoCount');
+      root.querySelector('#mdEntryCount').textContent =
+        entries.length;
 
-      if (entryCount) {
-        entryCount.textContent = entries.length;
-      }
+      root.querySelector('#mdTrashCount').textContent =
+        (trash || []).length;
 
-      if (trashCount) {
-        trashCount.textContent = trash.length;
-      }
+      const photoResults = await Promise.all(
+        entries.map(entry => S.db.getDiaryPhotos(entry.id))
+      );
 
-      if (photoCount) {
-        const photoResults = await Promise.all(
-          entries.map(entry =>
-            S.db.getDiaryPhotos(entry.id)
-          )
-        );
+      if (!root) return;
 
-        photoCount.textContent = photoResults.reduce(
-          (total, photos) => total + photos.length,
+      root.querySelector('#mdPhotoCount').textContent =
+        photoResults.reduce(
+          (total, photos) => total + (photos || []).length,
           0
         );
-      }
 
       renderEntries();
 
     } catch (error) {
       S.log('diary:refresh', error);
-      showToast('Could not load Diary entries');
+      toast('Could not load Diary entries');
     }
   }
 
-  /* ---------- RENDER ENTRIES ---------- */
+  /* ---------- ENTRY LIST ---------- */
 
   function renderEntries() {
     if (!root) return;
@@ -118,8 +218,6 @@ Saregaana.register('diary', (function () {
     const emptyTitle = root.querySelector('#mdEmptyTitle');
     const emptyText = root.querySelector('#mdEmptyText');
     const emptyAdd = root.querySelector('#mdEmptyAdd');
-
-    if (!container || !empty) return;
 
     container.textContent = '';
 
@@ -132,19 +230,17 @@ Saregaana.register('diary', (function () {
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
 
-      filtered = filtered.filter(entry => {
-        return (
-          (entry.title || '').toLowerCase().includes(term) ||
-          (entry.body || '').toLowerCase().includes(term) ||
-          (entry.mood || '').toLowerCase().includes(term)
-        );
-      });
+      filtered = filtered.filter(entry => (
+        (entry.title || '').toLowerCase().includes(term) ||
+        (entry.body || '').toLowerCase().includes(term) ||
+        (entry.mood || '').toLowerCase().includes(term)
+      ));
     }
 
-    if (filtered.length === 0) {
+    if (!filtered.length) {
       empty.hidden = false;
 
-      if (entries.length === 0) {
+      if (!entries.length) {
         emptyTitle.textContent = 'Your story starts here.';
         emptyText.textContent =
           'Create your first diary entry and give your memories a permanent place.';
@@ -195,50 +291,135 @@ Saregaana.register('diary', (function () {
     preview.className = 'md-entry-preview';
 
     const body = entry.body || 'No written memory yet.';
-
-    preview.textContent =
-      body.length > 145
-        ? body.slice(0, 145) + '…'
-        : body;
+    preview.textContent = body.length > 145
+      ? body.slice(0, 145) + '…'
+      : body;
 
     const full = document.createElement('div');
     full.className = 'md-entry-full';
     full.hidden = true;
-    full.textContent = body;
+
+    if (entry.bodyHtml) {
+      full.innerHTML = sanitiseHtml(entry.bodyHtml);
+    } else {
+      full.textContent = body;
+    }
+
+    const photoArea = document.createElement('div');
+    photoArea.className = 'md-entry-photos';
+    photoArea.hidden = true;
 
     const actions = document.createElement('div');
     actions.className = 'md-entry-actions';
 
     actions.append(
-      createButton('Read Memory', 'read', entry.id),
-      createButton(
+      makeButton('Read Memory', 'read', entry.id),
+      makeButton(
         entry.favorite ? '♥ Favourited' : '♡ Favourite',
         'favorite',
         entry.id
       ),
-      createButton('Edit', 'edit', entry.id),
-      createButton('Move to Trash', 'trash', entry.id)
+      makeButton('Edit', 'edit', entry.id),
+      makeButton('Move to Trash', 'trash', entry.id)
     );
 
-    card.append(
-      top,
-      title,
-      preview,
-      full,
-      actions
-    );
-
+    card.append(top, title, preview, full, photoArea, actions);
     return card;
   }
 
-  /* ---------- FORM ---------- */
+  async function loadCardPhotos(card, entryId) {
+    const area = card.querySelector('.md-entry-photos');
+    if (!area || area.dataset.loaded === 'yes') return;
 
-  function openForm(entry) {
+    area.textContent = '';
+
+    try {
+      const photos = await S.db.getDiaryPhotos(entryId);
+
+      if (!root || !card.isConnected) return;
+
+      (photos || []).forEach(photo => {
+        if (!photo.blob) return;
+
+        const img = document.createElement('img');
+        img.alt = 'Diary photograph';
+        img.loading = 'lazy';
+        img.src = registerUrl(URL.createObjectURL(photo.blob));
+        area.appendChild(img);
+      });
+
+      area.dataset.loaded = 'yes';
+      area.hidden = area.children.length === 0;
+
+    } catch (error) {
+      S.log('diary:load-card-photos', error);
+      toast('Could not load attached photos');
+    }
+  }
+
+  /* ---------- EDITOR ---------- */
+
+  function runEditorCommand(command, value) {
+    const editor = root && root.querySelector('#mdBody');
+    if (!editor) return;
+
+    editor.focus();
+
+    if (command === 'formatBlock') {
+      document.execCommand('formatBlock', false, value);
+    } else {
+      document.execCommand(command, false, null);
+    }
+  }
+
+  function renderPhotoPreview() {
+    const preview = root.querySelector('#mdPhotoPreview');
+    preview.textContent = '';
+
+    existingPhotos
+      .filter(photo => !removedPhotoIds.includes(photo.id))
+      .forEach(photo => {
+        if (!photo.blob) return;
+
+        const item = document.createElement('div');
+        item.className = 'md-photo-item';
+
+        const img = document.createElement('img');
+        img.alt = 'Attached photograph';
+        img.src = registerUrl(URL.createObjectURL(photo.blob));
+
+        const remove = makeButton('×', 'remove-existing-photo', photo.id);
+        remove.className = 'md-photo-remove';
+        remove.setAttribute('aria-label', 'Remove photo');
+
+        item.append(img, remove);
+        preview.appendChild(item);
+      });
+
+    draftPhotos.forEach((file, index) => {
+      const item = document.createElement('div');
+      item.className = 'md-photo-item';
+
+      const img = document.createElement('img');
+      img.alt = 'New photograph preview';
+      img.src = registerUrl(URL.createObjectURL(file));
+
+      const remove = makeButton('×', 'remove-draft-photo', String(index));
+      remove.className = 'md-photo-remove';
+      remove.setAttribute('aria-label', 'Remove photo');
+
+      item.append(img, remove);
+      preview.appendChild(item);
+    });
+  }
+
+  async function openForm(entry) {
     if (!root) return;
+
+    clearDraftPhotos();
 
     const wrap = root.querySelector('#mdFormWrap');
     const heading = root.querySelector('#mdFormHeading');
-
     const title = root.querySelector('#mdTitle');
     const date = root.querySelector('#mdDate');
     const mood = root.querySelector('#mdMood');
@@ -246,26 +427,30 @@ Saregaana.register('diary', (function () {
 
     editingId = entry ? entry.id : null;
 
-    heading.textContent = entry
-      ? 'Edit Memory'
-      : 'Write an Entry';
-
+    heading.textContent = entry ? 'Edit Memory' : 'Write an Entry';
     title.value = entry ? entry.title || '' : '';
-    date.value = entry
-      ? entry.entryDate || localDate()
-      : localDate();
+    date.value = entry ? entry.entryDate || localDate() : localDate();
+    mood.value = entry ? entry.mood || 'No mood' : 'No mood';
 
-    mood.value = entry
-      ? entry.mood || 'No mood'
-      : 'No mood';
+    body.innerHTML = entry
+      ? sanitiseHtml(entry.bodyHtml || '')
+      : '';
 
-    body.value = entry ? entry.body || '' : '';
+    root.querySelector('#mdSave').textContent =
+      entry ? 'Update Memory' : 'Save Memory';
 
     wrap.hidden = false;
 
-    root.querySelector('#mdSave').textContent = entry
-      ? 'Update Memory'
-      : 'Save Memory';
+    if (entry) {
+      try {
+        existingPhotos = await S.db.getDiaryPhotos(entry.id) || [];
+      } catch (error) {
+        S.log('diary:edit-photos', error);
+        toast('Could not load existing photos');
+      }
+    }
+
+    renderPhotoPreview();
 
     wrap.scrollIntoView({
       behavior: 'smooth',
@@ -278,74 +463,146 @@ Saregaana.register('diary', (function () {
   function closeForm() {
     if (!root) return;
 
-    const form = root.querySelector('#mdEntryForm');
-
-    form.reset();
-
+    root.querySelector('#mdEntryForm').reset();
+    root.querySelector('#mdBody').innerHTML = '';
     root.querySelector('#mdFormWrap').hidden = true;
 
     editingId = null;
+    clearDraftPhotos();
   }
+
+  /* ---------- PHOTO INPUT ---------- */
+
+  function addPhotoFiles(fileList) {
+    const files = Array.from(fileList || []);
+    let added = 0;
+
+    const currentCount =
+      existingPhotos.filter(p => !removedPhotoIds.includes(p.id)).length +
+      draftPhotos.length;
+
+    files.forEach(file => {
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        toast('Unsupported image format');
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        toast('Each photo must be 8 MB or smaller');
+        return;
+      }
+
+      if (currentCount + added >= MAX_PHOTOS) {
+        toast('You can attach up to 8 photos');
+        return;
+      }
+
+      draftPhotos.push(file);
+      added++;
+    });
+
+    renderPhotoPreview();
+  }
+
+  /* ---------- SAVE ENTRY ---------- */
 
   async function saveEntry(event) {
     event.preventDefault();
-
     if (!root) return;
 
     const title = root.querySelector('#mdTitle').value.trim();
-    const date = root.querySelector('#mdDate').value;
+    const date = root.querySelector('#mdDate').value || localDate();
     const mood = root.querySelector('#mdMood').value;
-    const body = root.querySelector('#mdBody').value.trim();
+
+    const bodyHtml = sanitiseHtml(
+      root.querySelector('#mdBody').innerHTML
+    );
+
+    const body = htmlToText(bodyHtml);
 
     if (!title) {
-      showToast('Please enter a title');
+      toast('Please enter a title');
       return;
     }
 
-    const previous = editingId
+    const wasEditing = !!editingId;
+    const previous = wasEditing
       ? entries.find(entry => entry.id === editingId)
       : null;
 
-    const record = {
-      title,
-      entryDate: date || localDate(),
-      mood,
-      body,
-      favorite: previous ? !!previous.favorite : false
-    };
-
-    if (editingId) {
-      record.id = editingId;
-      record.createdAt = previous
-        ? previous.createdAt
-        : Date.now();
-    }
-
+    const id = wasEditing ? editingId : S.uid();
     const saveButton = root.querySelector('#mdSave');
+
+    const newPhotoIds = [];
+    let entrySaved = false;
+
     saveButton.disabled = true;
     saveButton.textContent = 'Saving...';
 
     try {
+      for (const file of draftPhotos) {
+        const photoId = await S.db.saveDiaryPhoto(id, file);
+        newPhotoIds.push(photoId);
+      }
+
+      const keptPhotoIds = existingPhotos
+        .filter(photo => !removedPhotoIds.includes(photo.id))
+        .map(photo => photo.id);
+
+      const record = {
+        id,
+        title,
+        entryDate: date,
+        mood,
+        body,
+        bodyHtml,
+        photoIds: keptPhotoIds.concat(newPhotoIds),
+        favorite: previous ? !!previous.favorite : false,
+        createdAt: previous
+          ? previous.createdAt
+          : Date.now()
+      };
+
       await S.db.saveDiaryEntry(record);
+      entrySaved = true;
+
+      // Delete removed old photos only after the entry is safely saved.
+      for (const photoId of removedPhotoIds) {
+        try {
+          await S.db.deleteDiaryPhoto(photoId);
+        } catch (cleanupError) {
+          S.log('diary:old-photo-cleanup', cleanupError);
+        }
+      }
 
       closeForm();
       await refresh();
 
-      showToast(
-        editingId
-          ? 'Memory updated'
-          : 'Memory saved'
-      );
+      toast(wasEditing ? 'Memory updated' : 'Memory saved');
 
     } catch (error) {
       S.log('diary:save', error);
-      showToast('Could not save this memory');
+
+      // Roll back newly created photo records only if the entry itself
+      // did not save. Never remove photos referenced by a saved entry.
+      if (!entrySaved) {
+        for (const photoId of newPhotoIds) {
+          try {
+            await S.db.deleteDiaryPhoto(photoId);
+          } catch (cleanupError) {
+            S.log('diary:photo-rollback', cleanupError);
+          }
+        }
+      }
+
+      toast('Could not save this memory');
 
     } finally {
       if (root && root.querySelector('#mdSave')) {
-        const button = root.querySelector('#mdSave');
-        button.disabled = false;
-        button.textContent = 'Save Memory';
+        saveButton.disabled = false;
+        saveButton.textContent = wasEditing
+          ? 'Update Memory'
+          : 'Save Memory';
       }
     }
   }
@@ -354,7 +611,6 @@ Saregaana.register('diary', (function () {
 
   async function toggleFavorite(id) {
     const entry = entries.find(item => item.id === id);
-
     if (!entry) return;
 
     try {
@@ -365,15 +621,13 @@ Saregaana.register('diary', (function () {
 
       await refresh();
 
-      showToast(
-        !entry.favorite
-          ? 'Added to favourites'
-          : 'Removed from favourites'
-      );
+      toast(!entry.favorite
+        ? 'Added to favourites'
+        : 'Removed from favourites');
 
     } catch (error) {
       S.log('diary:favorite', error);
-      showToast('Could not update favourite');
+      toast('Could not update favourite');
     }
   }
 
@@ -381,7 +635,6 @@ Saregaana.register('diary', (function () {
 
   async function moveToTrash(id) {
     const entry = entries.find(item => item.id === id);
-
     if (!entry) return;
 
     let confirmed = false;
@@ -404,12 +657,10 @@ Saregaana.register('diary', (function () {
     try {
       await S.db.moveDiaryToTrash(id);
       await refresh();
-
-      showToast('Entry moved to Trash');
-
+      toast('Entry moved to Trash');
     } catch (error) {
       S.log('diary:trash', error);
-      showToast('Could not move entry to Trash');
+      toast('Could not move entry to Trash');
     }
   }
 
@@ -419,7 +670,6 @@ Saregaana.register('diary', (function () {
     if (!root) return;
 
     const button = event.target.closest('button');
-
     if (!button || !root.contains(button)) return;
 
     if (button.id === 'mdNewEntry' ||
@@ -430,6 +680,14 @@ Saregaana.register('diary', (function () {
 
     if (button.id === 'mdCancel') {
       closeForm();
+      return;
+    }
+
+    if (button.dataset.command) {
+      runEditorCommand(
+        button.dataset.command,
+        button.dataset.value
+      );
       return;
     }
 
@@ -450,10 +708,26 @@ Saregaana.register('diary', (function () {
     const action = button.dataset.action;
     const id = button.dataset.id;
 
+    if (action === 'remove-existing-photo') {
+      if (!removedPhotoIds.includes(id)) {
+        removedPhotoIds.push(id);
+      }
+      renderPhotoPreview();
+      return;
+    }
+
+    if (action === 'remove-draft-photo') {
+      const index = Number(id);
+      if (Number.isInteger(index)) {
+        draftPhotos.splice(index, 1);
+      }
+      renderPhotoPreview();
+      return;
+    }
+
     if (!action || !id) return;
 
     const entry = entries.find(item => item.id === id);
-
     if (!entry) return;
 
     if (action === 'read') {
@@ -466,8 +740,12 @@ Saregaana.register('diary', (function () {
         ? 'Read Memory'
         : 'Close Memory';
 
+      if (!full.hidden) {
+        await loadCardPhotos(card, id);
+      }
+
     } else if (action === 'edit') {
-      openForm(entry);
+      await openForm(entry);
 
     } else if (action === 'favorite') {
       await toggleFavorite(id);
@@ -478,10 +756,8 @@ Saregaana.register('diary', (function () {
   }
 
   /* ---------- INITIALISE ---------- */
-
-  async function init(mount) {
+async function init(mount) {
     root = mount;
-
     entries = [];
     activeFilter = 'all';
     searchTerm = '';
@@ -489,7 +765,10 @@ Saregaana.register('diary', (function () {
     offs = [];
 
     const clickHandler = event => {
-      handleClick(event);
+      handleClick(event).catch(error => {
+        S.log('diary:click', error);
+        toast('Something went wrong');
+      });
     };
 
     const submitHandler = event => {
@@ -502,6 +781,10 @@ Saregaana.register('diary', (function () {
       searchTerm = event.target.value.trim();
       renderEntries();
     };
+    const photoHandler = event => {
+      addPhotoFiles(event.target.files);
+      event.target.value = '';
+    };
 
     root.addEventListener('click', clickHandler);
     root.addEventListener('submit', submitHandler);
@@ -509,20 +792,25 @@ Saregaana.register('diary', (function () {
     root.querySelector('#mdSearch')
       .addEventListener('input', searchHandler);
 
+    root.querySelector('#mdPhotoInput')
+      .addEventListener('change', photoHandler);
+
     offs.push(() => {
       if (!root) return;
 
       root.removeEventListener('click', clickHandler);
       root.removeEventListener('submit', submitHandler);
+
+      root.querySelector('#mdSearch')
+        ?.removeEventListener('input', searchHandler);
+        root.querySelector('#mdPhotoInput')
+        ?.removeEventListener('change', photoHandler);
     });
 
     await refresh();
 
-    offs.push(
-      S.bus.on('diary:changed', refresh)
-    );
+    offs.push(S.bus.on('diary:changed', refresh));
   }
-
   /* ---------- DESTROY ---------- */
 
   function destroy() {
@@ -533,14 +821,15 @@ Saregaana.register('diary', (function () {
     });
 
     offs = [];
+    clearObjectUrls();
     entries = [];
+    draftPhotos = [];
+    existingPhotos = [];
+    removedPhotoIds = [];
     root = null;
     editingId = null;
   }
 
-  return {
-    init,
-    destroy
-  };
+  return { init, destroy };
 
 })());

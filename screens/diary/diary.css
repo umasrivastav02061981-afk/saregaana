@@ -549,3 +549,234 @@
     padding: 19px 16px;
   }
 }
+/* =========================================
+   PHASE 3 — RICH TEXT + PHOTO JOURNAL
+========================================= */
+
+.md-editor {
+  overflow: hidden;
+  border: 1px solid rgba(217,183,126,.25);
+  border-radius: 10px;
+  background: rgba(0,0,0,.17);
+}
+
+.md-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 9px;
+  border-bottom: 1px solid rgba(242,229,208,.13);
+  background: rgba(255,255,255,.035);
+}
+
+.md-toolbar button {
+  min-width: 31px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid rgba(242,229,208,.13);
+  border-radius: 6px;
+  background: rgba(255,255,255,.04);
+  color: var(--md-cream);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.md-toolbar button:active,
+.md-toolbar button:focus {
+  border-color: var(--md-gold);
+  background: rgba(217,183,126,.15);
+}
+
+.md-toolbar-divider {
+  width: 1px;
+  height: 21px;
+  margin: 0 2px;
+  background: rgba(242,229,208,.2);
+}
+
+.md-editor-body {
+  min-height: 190px;
+  max-height: 440px;
+  overflow-y: auto;
+  padding: 15px;
+  outline: none;
+  color: var(--md-cream);
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.md-editor-body:empty::before {
+  content: attr(data-placeholder);
+  color: #a88c86;
+  pointer-events: none;
+}
+
+.md-editor-body h2,
+.md-entry-full h2 {
+  margin: 13px 0 7px;
+  color: var(--md-gold);
+  font-family: var(--f-display);
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.md-editor-body h3,
+.md-entry-full h3 {
+  margin: 11px 0 6px;
+  color: var(--md-cream);
+  font-family: var(--f-display);
+  font-size: 19px;
+  font-weight: 400;
+}
+
+.md-editor-body ul,
+.md-editor-body ol,
+.md-entry-full ul,
+.md-entry-full ol {
+  padding-left: 23px;
+  margin: 8px 0;
+}
+
+.md-editor-body blockquote,
+.md-entry-full blockquote {
+  margin: 12px 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--md-gold);
+  background: rgba(217,183,126,.08);
+  color: #ddc5b5;
+}
+
+.md-photo-section {
+  margin-top: 20px;
+}
+
+.md-photo-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.md-photo-heading > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.md-photo-heading strong {
+  color: var(--md-cream);
+  font-size: 13px;
+}
+
+.md-photo-heading span {
+  color: #a98b83;
+  font-size: 10px;
+}
+
+.md-photo-add {
+  padding: 9px 12px;
+  border: 1px solid rgba(217,183,126,.35);
+  border-radius: 7px;
+  color: var(--md-gold);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.md-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.md-photo-item {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border: 1px solid rgba(242,229,208,.15);
+  border-radius: 9px;
+  background: rgba(0,0,0,.2);
+}
+
+.md-photo-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.md-photo-remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(35,15,20,.85);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.md-photo-note {
+  margin-top: 8px;
+  color: #a98b83;
+  font-size: 10px;
+}
+
+.md-entry-photos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.md-entry-photos img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 7px;
+  border: 1px solid rgba(242,229,208,.15);
+}
+
+.md-entry-full p {
+  margin: 7px 0;
+}
+
+.md-entry-full strong,
+.md-entry-full b {
+  color: #f4dfc6;
+}
+
+.md-entry-full em,
+.md-entry-full i {
+  color: #e3c3ad;
+}
+
+.md-photo-item[hidden],
+.md-entry-photos[hidden] {
+  display: none;
+}
+
+@media (max-width: 390px) {
+  .md-toolbar {
+    gap: 4px;
+    padding: 7px;
+  }
+
+  .md-toolbar button {
+    min-width: 28px;
+    padding: 0 6px;
+  }
+
+  .md-photo-grid,
+  .md-entry-photos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

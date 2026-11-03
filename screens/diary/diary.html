@@ -1,5 +1,4 @@
 <section class="md-screen">
-
   <header class="md-header">
     <div class="md-kicker">SAREGAANA · PERSONAL JOURNAL</div>
     <h1>Music Diary</h1>
@@ -11,16 +10,9 @@
       <span>YOUR PRIVATE COLLECTION</span>
       <span class="md-book-icon">✦</span>
     </div>
-
     <h2>A little space<br>for your memories.</h2>
-
-    <p>
-      Keep your favourite songs, thoughts,
-      photographs and moments together.
-    </p>
-
+    <p>Keep your favourite songs, thoughts, photographs and moments together.</p>
     <div class="md-rule"></div>
-
     <div class="md-welcome-foot">
       <span>EST. WITH YOUR STORIES</span>
       <span>NO. 001</span>
@@ -28,94 +20,50 @@
   </section>
 
   <section class="md-stats">
-    <div>
-      <strong id="mdEntryCount">0</strong>
-      <span>ENTRIES</span>
-    </div>
-
-    <div>
-      <strong id="mdPhotoCount">0</strong>
-      <span>PHOTOS</span>
-    </div>
-
-    <div>
-      <strong id="mdTrashCount">0</strong>
-      <span>IN TRASH</span>
-    </div>
+    <div><strong id="mdEntryCount">0</strong><span>ENTRIES</span></div>
+    <div><strong id="mdPhotoCount">0</strong><span>PHOTOS</span></div>
+    <div><strong id="mdTrashCount">0</strong><span>IN TRASH</span></div>
   </section>
 
-  <!-- Diary actions -->
   <section class="md-workspace">
-
     <div class="md-section-heading">
       <div>
         <span class="md-kicker">YOUR PERSONAL COLLECTION</span>
         <h2>My Entries</h2>
       </div>
-
-      <button class="md-new-btn" id="mdNewEntry">
-        <span>＋</span> New Entry
-      </button>
+      <button class="md-new-btn" id="mdNewEntry">＋ New Entry</button>
     </div>
 
-    <!-- Search -->
     <div class="md-search">
       <span>⌕</span>
-      <input
-        id="mdSearch"
-        type="search"
-        placeholder="Search your memories..."
-        autocomplete="off"
-      >
+      <input id="mdSearch" type="search"
+        placeholder="Search your memories..." autocomplete="off">
     </div>
 
-    <!-- Filters -->
     <div class="md-filters">
-      <button class="md-filter active"
-              data-filter="all">
-        All Entries
-      </button>
-
-      <button class="md-filter"
-              data-filter="favorites">
-        ♥ Favourites
-      </button>
+      <button class="md-filter active" data-filter="all">All Entries</button>
+      <button class="md-filter" data-filter="favorites">♥ Favourites</button>
     </div>
 
-    <!-- New/Edit Entry Form -->
     <section class="md-form-wrap" id="mdFormWrap" hidden>
-
       <div class="md-form-heading">
         <div>
-          <span class="md-kicker">A NEW MEMORY</span>
+          <span class="md-kicker">YOUR PERSONAL JOURNAL</span>
           <h2 id="mdFormHeading">Write an Entry</h2>
         </div>
-
         <span class="md-form-symbol">✎</span>
       </div>
 
       <form id="mdEntryForm">
-
         <label for="mdTitle">Entry Title</label>
-        <input
-          id="mdTitle"
-          type="text"
-          maxlength="100"
-          placeholder="Give this memory a title..."
-          required
-        >
+        <input id="mdTitle" type="text" maxlength="100"
+          placeholder="Give this memory a title..." required>
 
         <div class="md-form-row">
-
           <div>
             <label for="mdDate">Memory Date</label>
-            <input
-              id="mdDate"
-              type="date"
-              required
-            >
+            <input id="mdDate" type="date" required>
           </div>
-
           <div>
             <label for="mdMood">Your Mood</label>
             <select id="mdMood">
@@ -129,65 +77,67 @@
               <option value="Thoughtful">📖 Thoughtful</option>
             </select>
           </div>
-
         </div>
 
-        <label for="mdBody">Your Memory</label>
-        <textarea
-          id="mdBody"
-          rows="7"
-          placeholder="Write down your thoughts, memories, or the story behind a song..."
-        ></textarea>
+        <label>Your Memory</label>
+        <div class="md-editor">
+          <div class="md-toolbar" role="toolbar" aria-label="Text formatting">
+            <button type="button" data-command="bold" title="Bold"><b>B</b></button>
+            <button type="button" data-command="italic" title="Italic"><i>I</i></button>
+            <button type="button" data-command="underline" title="Underline"><u>U</u></button>
+            <span class="md-toolbar-divider"></span>
+            <button type="button" data-command="formatBlock" data-value="h2">H2</button>
+            <button type="button" data-command="formatBlock" data-value="h3">H3</button>
+            <span class="md-toolbar-divider"></span>
+            <button type="button" data-command="insertUnorderedList" title="Bulleted list">• List</button>
+            <button type="button" data-command="insertOrderedList" title="Numbered list">1. List</button>
+            <button type="button" data-command="formatBlock" data-value="blockquote" title="Quote">❝</button>
+            <span class="md-toolbar-divider"></span>
+            <button type="button" data-command="undo" title="Undo">↶</button>
+            <button type="button" data-command="redo" title="Redo">↷</button>
+          </div>
 
-        <div class="md-form-note">
-          Your entry is stored privately on this device.
+          <div id="mdBody" class="md-editor-body"
+            contenteditable="true" role="textbox" aria-multiline="true"
+            data-placeholder="Write down your thoughts, memories, or the story behind a song..."></div>
         </div>
+
+        <div class="md-photo-section">
+          <div class="md-photo-heading">
+            <div>
+              <strong>Photographs</strong>
+              <span>Attach up to 8 photos to this memory</span>
+            </div>
+            <label class="md-photo-add" for="mdPhotoInput">＋ Add Photos</label>
+            <input id="mdPhotoInput" type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              multiple hidden>
+          </div>
+          <div class="md-photo-grid" id="mdPhotoPreview"></div>
+          <p class="md-photo-note">Maximum 8 photos · 8 MB per photo</p>
+        </div>
+
+        <p class="md-form-note">Your entry and photographs stay on this device.</p>
 
         <div class="md-form-actions">
-          <button type="button"
-                  class="md-cancel-btn"
-                  id="mdCancel">
-            Cancel
-          </button>
-
-          <button type="submit"
-                  class="md-save-btn"
-                  id="mdSave">
-            Save Memory
-          </button>
+          <button type="button" class="md-cancel-btn" id="mdCancel">Cancel</button>
+          <button type="submit" class="md-save-btn" id="mdSave">Save Memory</button>
         </div>
-
       </form>
     </section>
 
-    <!-- Entries -->
     <div class="md-entry-list" id="mdEntries"></div>
 
-    <!-- Empty state -->
     <section class="md-empty" id="mdEmpty">
-
       <div class="md-empty-icon">♫</div>
-
-      <h2 id="mdEmptyTitle">
-        Your story starts here.
-      </h2>
-
-      <p id="mdEmptyText">
-        Create your first diary entry and give
-        your memories a permanent place.
-      </p>
-
-      <button class="md-empty-btn" id="mdEmptyAdd">
-        Create Your First Entry
-      </button>
-
+      <h2 id="mdEmptyTitle">Your story starts here.</h2>
+      <p id="mdEmptyText">Create your first diary entry and give your memories a permanent place.</p>
+      <button class="md-empty-btn" id="mdEmptyAdd">Create Your First Entry</button>
     </section>
-
   </section>
 
   <footer class="md-footer">
     <span>SAREGAANA</span>
     <span>YOUR MUSIC · YOUR MEMORIES</span>
   </footer>
-
 </section>
