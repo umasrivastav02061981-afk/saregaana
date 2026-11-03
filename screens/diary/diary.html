@@ -1,16 +1,9 @@
 <section class="md-screen">
 
   <header class="md-header">
-    <div class="md-kicker">
-      SAREGAANA · PERSONAL JOURNAL
-    </div>
-
+    <div class="md-kicker">SAREGAANA · PERSONAL JOURNAL</div>
     <h1>Music Diary</h1>
-
-    <p>
-      Every song has a story.
-      Every memory deserves a place.
-    </p>
+    <p>Every song has a story. Every memory deserves a place.</p>
   </header>
 
   <section class="md-welcome">
@@ -51,16 +44,145 @@
     </div>
   </section>
 
-  <section class="md-empty">
-    <div class="md-empty-icon">♫</div>
+  <!-- Diary actions -->
+  <section class="md-workspace">
 
-    <h2>Your story starts here.</h2>
+    <div class="md-section-heading">
+      <div>
+        <span class="md-kicker">YOUR PERSONAL COLLECTION</span>
+        <h2>My Entries</h2>
+      </div>
 
-    <p>
-      Your diary foundation is ready.
-      The writing studio and memory editor
-      will arrive in the next development phase.
-    </p>
+      <button class="md-new-btn" id="mdNewEntry">
+        <span>＋</span> New Entry
+      </button>
+    </div>
+
+    <!-- Search -->
+    <div class="md-search">
+      <span>⌕</span>
+      <input
+        id="mdSearch"
+        type="search"
+        placeholder="Search your memories..."
+        autocomplete="off"
+      >
+    </div>
+
+    <!-- Filters -->
+    <div class="md-filters">
+      <button class="md-filter active"
+              data-filter="all">
+        All Entries
+      </button>
+
+      <button class="md-filter"
+              data-filter="favorites">
+        ♥ Favourites
+      </button>
+    </div>
+
+    <!-- New/Edit Entry Form -->
+    <section class="md-form-wrap" id="mdFormWrap" hidden>
+
+      <div class="md-form-heading">
+        <div>
+          <span class="md-kicker">A NEW MEMORY</span>
+          <h2 id="mdFormHeading">Write an Entry</h2>
+        </div>
+
+        <span class="md-form-symbol">✎</span>
+      </div>
+
+      <form id="mdEntryForm">
+
+        <label for="mdTitle">Entry Title</label>
+        <input
+          id="mdTitle"
+          type="text"
+          maxlength="100"
+          placeholder="Give this memory a title..."
+          required
+        >
+
+        <div class="md-form-row">
+
+          <div>
+            <label for="mdDate">Memory Date</label>
+            <input
+              id="mdDate"
+              type="date"
+              required
+            >
+          </div>
+
+          <div>
+            <label for="mdMood">Your Mood</label>
+            <select id="mdMood">
+              <option value="No mood">Choose mood</option>
+              <option value="Happy">😊 Happy</option>
+              <option value="Nostalgic">📻 Nostalgic</option>
+              <option value="Peaceful">🌿 Peaceful</option>
+              <option value="Emotional">💭 Emotional</option>
+              <option value="Romantic">❤️ Romantic</option>
+              <option value="Excited">✨ Excited</option>
+              <option value="Thoughtful">📖 Thoughtful</option>
+            </select>
+          </div>
+
+        </div>
+
+        <label for="mdBody">Your Memory</label>
+        <textarea
+          id="mdBody"
+          rows="7"
+          placeholder="Write down your thoughts, memories, or the story behind a song..."
+        ></textarea>
+
+        <div class="md-form-note">
+          Your entry is stored privately on this device.
+        </div>
+
+        <div class="md-form-actions">
+          <button type="button"
+                  class="md-cancel-btn"
+                  id="mdCancel">
+            Cancel
+          </button>
+
+          <button type="submit"
+                  class="md-save-btn"
+                  id="mdSave">
+            Save Memory
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Entries -->
+    <div class="md-entry-list" id="mdEntries"></div>
+
+    <!-- Empty state -->
+    <section class="md-empty" id="mdEmpty">
+
+      <div class="md-empty-icon">♫</div>
+
+      <h2 id="mdEmptyTitle">
+        Your story starts here.
+      </h2>
+
+      <p id="mdEmptyText">
+        Create your first diary entry and give
+        your memories a permanent place.
+      </p>
+
+      <button class="md-empty-btn" id="mdEmptyAdd">
+        Create Your First Entry
+      </button>
+
+    </section>
+
   </section>
 
   <footer class="md-footer">
