@@ -1,6 +1,6 @@
 /* ===== Saregaana Service Worker ===== */
 
-const CACHE_NAME = 'saregaana-shell-v3';
+const CACHE_NAME = 'saregaana-shell-v4';
 
 const CORE_FILES = [
   './',
@@ -85,9 +85,14 @@ const CORE_FILES = [
   './screens/stats/stats.html',
   './screens/stats/stats.css',
   './screens/stats/stats.js',
+  
   './screens/mixtape/mixtape.html',
 './screens/mixtape/mixtape.css',
 './screens/mixtape/mixtape.js',
+
+'./screens/diary/diary.html',
+'./screens/diary/diary.css',
+'./screens/diary/diary.js',
 
   './assets/icons/icon.svg'
   

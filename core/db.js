@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   const S = window.Saregaana;
-  const NAME = 'saregaana', VER = 3;
+  const NAME = 'saregaana', VER = 4;
   let db = null;
   const coverCache = new Map();               // song id -> picture URL (or null)
 
@@ -24,7 +24,26 @@
         if (!d.objectStoreNames.contains('covers')) d.createObjectStore('covers');
         if (!d.objectStoreNames.contains('posters')) d.createObjectStore('posters');   // film posters you pick
         if (!d.objectStoreNames.contains('playlists')) d.createObjectStore('playlists', { keyPath: 'id' });
-        if (!d.objectStoreNames.contains('lyrics')) d.createObjectStore('lyrics');     // song id -> lyrics text
+        if (!d.objectStoreNames.contains('lyrics')) d.createObjectStore('lyrics'); 
+        // ---- Music Diary stores (database version 4) ----
+if (!d.objectStoreNames.contains('diary')) {
+  d.createObjectStore('diary', { keyPath: 'id' });
+}
+
+if (!d.objectStoreNames.contains('diaryTrash')) {
+  d.createObjectStore('diaryTrash', { keyPath: 'id' });
+}
+
+if (!d.objectStoreNames.contains('diaryPhotos')) {
+  const photos = d.createObjectStore('diaryPhotos', {
+    keyPath: 'id'
+  });
+
+  photos.createIndex('entryId', 'entryId', {
+    unique: false
+  });
+}
+        // song id -> lyrics text
       };
       r.onsuccess = () => res(r.result);
       r.onerror = () => rej(r.error);
@@ -147,6 +166,193 @@
       t.objectStore('posters').delete(key);
       await finish(t);
     },
+    /* ---- Music Diary ---- */
+
+async getDiaryEntries() {
+  const entries = await req(
+    db.transaction('diary')
+      .objectStore('diary')
+      .getAll()
+  );
+
+  return entries.sort(
+    (a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)
+  );
+},
+
+getDiaryEntry(id) {
+  return req(
+    db.transaction('diary')
+      .objectStore('diary')
+      .get(id)
+  );
+},
+
+async saveDiaryEntry(entry) {
+  if (!entry || typeof entry !== 'object') {
+    throw new Error('Invalid diary entry');
+  }
+
+  const now = Date.now();
+
+  const record = Object.assign({}, entry, {
+    id: entry.id || S.uid(),
+    createdAt: entry.createdAt || now,
+    updatedAt: now
+  });
+
+  const t = db.transaction('diary', 'readwrite');
+  t.objectStore('diary').put(record);
+
+  await finish(t);
+
+  S.bus.emit('diary:changed', record);
+
+  return record;
+},
+
+async moveDiaryToTrash(id) {
+  const t = db.transaction(
+    ['diary', 'diaryTrash'],
+    'readwrite'
+  );
+
+  const active = t.objectStore('diary');
+  const trash = t.objectStore('diaryTrash');
+
+  const getRequest = active.get(id);
+  let moved = false;
+
+  getRequest.onsuccess = () => {
+    const entry = getRequest.result;
+
+    if (!entry) return;
+
+    trash.put(Object.assign({}, entry, {
+      trashedAt: Date.now()
+    }));
+
+    active.delete(id);
+    moved = true;
+  };
+
+  await finish(t);
+
+  if (moved) S.bus.emit('diary:changed');
+
+  return moved;
+},
+
+async getTrashedDiaryEntries() {
+  const entries = await req(
+    db.transaction('diaryTrash')
+      .objectStore('diaryTrash')
+      .getAll()
+  );
+
+  return entries.sort(
+    (a, b) => (b.trashedAt || 0) - (a.trashedAt || 0)
+  );
+},
+
+async restoreDiaryEntry(id) {
+  const t = db.transaction(
+    ['diary', 'diaryTrash'],
+    'readwrite'
+  );
+
+  const active = t.objectStore('diary');
+  const trash = t.objectStore('diaryTrash');
+
+  const getRequest = trash.get(id);
+  let restored = false;
+
+  getRequest.onsuccess = () => {
+    const entry = getRequest.result;
+
+    if (!entry) return;
+
+    const restoredEntry = Object.assign({}, entry);
+    delete restoredEntry.trashedAt;
+
+    active.put(restoredEntry);
+    trash.delete(id);
+
+    restored = true;
+  };
+
+  await finish(t);
+
+  if (restored) S.bus.emit('diary:changed');
+
+  return restored;
+},
+
+async deleteTrashedDiaryEntry(id) {
+  const t = db.transaction(
+    ['diaryTrash', 'diaryPhotos'],
+    'readwrite'
+  );
+
+  const trash = t.objectStore('diaryTrash');
+  const photos = t.objectStore('diaryPhotos');
+
+  const getRequest = trash.get(id);
+
+  getRequest.onsuccess = () => {
+    if (!getRequest.result) return;
+
+    trash.delete(id);
+
+    const photoRequest = photos.index('entryId').getAll(id);
+
+    photoRequest.onsuccess = () => {
+      (photoRequest.result || []).forEach(photo => {
+        photos.delete(photo.id);
+      });
+    };
+  };
+
+  await finish(t);
+
+  S.bus.emit('diary:changed');
+},
+
+async saveDiaryPhoto(entryId, blob) {
+  if (!(blob instanceof Blob)) {
+    throw new Error('Invalid photo file');
+  }
+
+  const photo = {
+    id: S.uid(),
+    entryId,
+    blob,
+    createdAt: Date.now()
+  };
+
+  const t = db.transaction('diaryPhotos', 'readwrite');
+  t.objectStore('diaryPhotos').put(photo);
+
+  await finish(t);
+
+  return photo.id;
+},
+
+getDiaryPhotos(entryId) {
+  return req(
+    db.transaction('diaryPhotos')
+      .objectStore('diaryPhotos')
+      .index('entryId')
+      .getAll(entryId)
+  );
+},
+
+async deleteDiaryPhoto(id) {
+  const t = db.transaction('diaryPhotos', 'readwrite');
+  t.objectStore('diaryPhotos').delete(id);
+
+  await finish(t);
+},
 
     async removeSong(id) {
       const t = db.transaction(['songs', 'files', 'covers', 'playlists', 'lyrics'], 'readwrite');

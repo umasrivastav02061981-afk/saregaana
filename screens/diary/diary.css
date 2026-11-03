@@ -1,0 +1,190 @@
+/* ===== MUSIC DIARY — Burgundy Edition ===== */
+
+.md-screen {
+  --md-wine: #421b26;
+  --md-red: #8d3c43;
+  --md-cream: #f2e5d0;
+  --md-paper: #e9d7bd;
+  --md-gold: #d9b77e;
+  --md-ink: #38252a;
+  --md-muted: #9e817d;
+
+  padding: 24px 17px 34px;
+  color: var(--md-cream);
+}
+
+.md-header {
+  margin-bottom: 23px;
+}
+
+.md-kicker {
+  color: var(--md-gold);
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  margin-bottom: 10px;
+}
+
+.md-header h1 {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(34px, 9vw, 43px);
+  line-height: 1.05;
+  color: var(--md-cream);
+}
+
+.md-header p {
+  margin-top: 9px;
+  color: #c5a9a1;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.md-welcome {
+  position: relative;
+  overflow: hidden;
+  padding: 23px 20px 18px;
+  border-radius: 15px;
+  color: var(--md-ink);
+  background:
+    radial-gradient(
+      rgba(75,35,35,.07) 1px,
+      transparent 1.5px
+    ) 0 0/9px 9px,
+    linear-gradient(145deg, #f7ead5, #e5cfb2);
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.25),
+    inset 0 0 0 1px rgba(255,255,255,.45);
+}
+
+.md-welcome-top,
+.md-welcome-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.md-welcome-top span:first-child,
+.md-welcome-foot {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  color: #89615a;
+}
+
+.md-book-icon {
+  color: var(--md-red);
+  font-size: 23px;
+}
+
+.md-welcome h2 {
+  margin-top: 23px;
+  font-family: var(--f-display);
+  font-size: 30px;
+  line-height: 1.08;
+  font-weight: 400;
+  color: #49252c;
+}
+
+.md-welcome p {
+  margin-top: 12px;
+  max-width: 260px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #765a52;
+}
+
+.md-rule {
+  height: 1px;
+  margin: 24px 0 13px;
+  background: rgba(91,51,45,.2);
+}
+
+.md-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin: 17px 0 25px;
+}
+
+.md-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 13px 9px;
+  border: 1px solid rgba(242,229,208,.12);
+  border-radius: 11px;
+  background: rgba(255,255,255,.035);
+}
+
+.md-stats strong {
+  color: var(--md-gold);
+  font-family: var(--f-display);
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.md-stats span {
+  color: #bda39a;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+}
+
+.md-empty {
+  padding: 30px 19px;
+  text-align: center;
+  border: 1px dashed rgba(242,229,208,.22);
+  border-radius: 14px;
+  background: rgba(255,255,255,.025);
+}
+
+.md-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 49px;
+  margin: 0 auto 13px;
+  border-radius: 50%;
+  background: rgba(141,60,67,.24);
+  color: var(--md-gold);
+  font-family: var(--f-display);
+  font-size: 27px;
+}
+
+.md-empty h2 {
+  font-family: var(--f-display);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--md-cream);
+}
+
+.md-empty p {
+  max-width: 280px;
+  margin: 9px auto 0;
+  color: #bda39a;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.md-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 25px;
+  color: #9d7b75;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+}
+
+@media (max-width: 360px) {
+  .md-screen {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .md-welcome {
+    padding: 19px 16px;
+  }
+}
